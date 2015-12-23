@@ -1,0 +1,27 @@
+{
+   "link" : "ref/project-type",
+   "desc" : "Reference table. Types of projects.",
+   "from" : "FROM ref_project_type a",
+   "order_by" : "ORDER BY a.type_name",
+   "version" : "1",
+   "examples" : [
+      "?format=text"
+   ],
+   "fields" : [
+      {
+         "desc" : "The system ID for a the project type.",
+         "name" : "ID",
+         "db_column" : "id"
+      },
+      {
+         "desc2" : "The name given to a project type.",
+         "name" : "name",
+         "db_column" : "type_name"
+      },
+      {
+         "desc2" : "An (optional) description of a project type.",
+         "name" : "description",
+         "db_column" : "type_description"
+      }
+   ]
+}

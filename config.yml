@@ -1,0 +1,54 @@
+# This is the main configuration file of your Dancer2 app
+# env-related settings should go to environments/$env.yml
+# all the settings in this file will be loaded at Dancer's startup.
+
+# Your application's name
+appname: "tranquillus"
+
+# The default layout to use for your application (located in
+# views/layouts/main.tt)
+layout: "main"
+
+# when the charset is set to UTF-8 Dancer2 will handle for you
+# all the magic of encoding and decoding. You should not care
+# about unicode within your app when this setting is set (recommended).
+charset: "UTF-8"
+
+# template engine
+# simple: default and very basic template engine
+# template_toolkit: TT
+
+#template: "simple"
+
+documentation_root: "/api/doc/vVERSION"
+
+data_root: "/api/vVERSION"
+
+
+template: "template_toolkit"
+engines:
+  template:
+    template_toolkit:
+      start_tag: '<%'
+      end_tag:   '%>'
+
+# Cache control
+
+
+# DBIx::Connector
+Databases:
+    default:
+        dsn: 'dbi:Pg:host=localhost;dbname=project_track'
+        username: 'ptrack_user'
+        password: 'ptrack'
+    ptrack:
+        dsn: 'dbi:Pg:host=localhost;dbname=project_track'
+        username: 'ptrack_user'
+        password: 'ptrack'
+
+#        dbi_params:
+#            RaiseError: 1
+#            AutoCommit: 1
+#        on_connect_do: ["SET NAMES 'utf8'", "SET CHARACTER SET 'utf8'" ]
+#        LongReadLen:
+#        LongTrunkOk:

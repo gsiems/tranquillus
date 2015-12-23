@@ -1,0 +1,31 @@
+<p><a href="/">Home</a> | <% module_name %></p>
+<hr/>
+
+<div class="mainBox">
+  <div class="dashboard">
+    <table>
+      <tr>
+        <th>Documentation score:</th>
+        <td>Module: <% pct_module_desc %>%</td>
+        <td>Routes: <% pct_route_desc %>%</td>
+        <td>Fields: <% pct_field_desc %>%</td>
+      </tr>
+      <% IF smoketest %><tr>
+
+      </tr><% END %>
+    </table>
+  </div>
+
+
+  <div class="mainBoxContent">
+    <% IF routes %><h3><% module_name %>:</h3>
+      <% IF description %><p><% description %></p><% END %>
+      <h4>The following routes are understood:</h4>
+      <ul><% FOREACH r IN routes %>
+        <li class="ResourceURI"><a href="<% r.doc_route %>"><% r.doc_route %></a></li>
+      <% END %></ul>
+      <% END %>
+    <% IF dev_url %><p>Developer documentation can be found <a href="<% dev_url %>">here</a>.</p><% END %>
+  </div>
+</div>
+

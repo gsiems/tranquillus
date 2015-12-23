@@ -1,0 +1,174 @@
+
+<p><a href="/">Home</a> |
+<a href="/<% module_prefix %>"><% module_name %></a> |
+<% data_route %>
+</p>
+<hr/>
+<div class="mainBox">
+  <div class="dashboard">
+    <table>
+      <tr>
+        <th>Documentation score:</th>
+        <td>Route: <% pct_route_desc %>%</td>
+        <td>Fields: <% pct_field_desc %>%</td>
+      </tr>
+      <% IF smoketest %><tr>
+
+      </tr><% END %>
+    </table>
+  </div>
+<div class="mainBoxContent">
+
+<h1>Documentation for "<% data_route %>":</h1>
+<h2>Description:</h2>
+<p><% desc %></p>
+
+<% IF deprecated %>
+  <h2>Deprecation Notice:</h2>
+  <p>This route has been deprecated<% IF deprecated_until %> and will cease to function after<% deprecated_until %><% END %>.
+  <% IF deprecated_by %>This route has been replaced by <a href="<% deprecated_by %>"><% deprecated_by %></a>.<% END %>
+</p>
+<% END %>
+
+<% IF environment == 'development' %>
+  <% IF db_table %>
+    <h4>DB Source:</h4>
+    <% IF dictionary_link %>
+      <p><a href="<% dictionary_link %>"><% table | html %></a></p>
+    <% ELSE %>
+      <p><% db_table | html %></p>
+    <% END %>
+  <% END %>
+<% END %>
+
+<h2>Search parameters:</h2>
+<% IF query_fields %>
+  <p>One or more of the following search parameters<% IF parms_optional %> may be specified when retrieving data<% ELSE %> need to be specified in order to retrieve data<% END %>:</p>
+  <% IF environment == 'development' %>
+    <table class="parameterTable">
+    <% FOR  p IN query_fields %>
+      <% IF loop.first() %>
+        <thead>
+        <tr class="tableHeader"><th>Parameter name</th><th>Required</th><th>DB Column</th><th>Scrubber</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+      <% END %>
+      <tr>
+      <td><% p.name | html %></td>
+      <td><% p.required | html %></td>
+      <td><% p.db_column | html %></td>
+      <td>
+      <% IF p.where_type %>
+        <% p.where_type | html %>
+        <% IF p.re %> (<% p.re %>)<% END %>
+      <% END %>
+      </td>
+      <td><% p.desc | html %>
+      <% IF p.reference_href %> (Ref:<a href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
+      </td>
+      </tr>
+    <% END %>
+    </tbody>
+    </table>
+    <br />
+  <% ELSE %>
+    <table class="parameterTable">
+    <% FOR p IN query_fields %>
+      <% IF loop.first() %>
+        <thead>
+        <tr class="tableHeader"><th>Parameter name</th><th>Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+      <% END %>
+      <tr>
+      <td><% p.name | html %></td>
+      <td><% p.required | html %></td>
+      <td><% p.desc | html %>
+      <% IF p.reference_href %> (Ref:<a href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
+      </td>
+      </tr>
+    <% END %>
+    </tbody>
+    </table>
+    <br />
+  <% END %>
+<% ELSE %>
+  <p>There are no search parameters available for this route.</p>
+<% END %>
+
+<% IF format_fields %>
+  <% FOR  p IN format_fields %>
+    <% IF loop.first() %>
+      <h2>Additional parameters:</h2>
+      <p>The following, optional, parameters may be specified:</p>
+      <table class="parameterTable">
+      <thead>
+      <tr class="tableHeader"><th>Parameter name</th><th>Description</th></tr></thead>
+      <tbody>
+    <% END %>
+    <tr>
+    <td><% p.name | html %></td>
+    <td><% p.desc | html %></td>
+    </tr>
+    <% IF loop.last() %>
+      </tbody>
+      </table>
+      <br />
+    <% END %>
+  <% END %>
+<% END %>
+
+<% IF result_fields %>
+  <h2>Result Set Definitions:</h2>
+  <% IF environment == 'development' %>
+    <table class="parameterTable">
+    <% FOR  p IN result_fields %>
+      <% IF loop.first() %>
+        <thead>
+        <tr class="tableHeader"><th>Field name</th><th>DB Column</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+      <% END %>
+      <tr>
+      <td><% p.name | html %></td>
+      <td><% p.db_column | html %></td>
+      <td><% p.desc | html %></td>
+      </tr>
+      <% IF loop.last() %>
+        </tbody>
+        </table>
+        <br />
+      <% END %>
+    <% END %>
+  <% ELSE %>
+    <table class="parameterTable">
+    <% FOR  p IN result_fields %>
+      <% IF loop.first() %>
+        <thead>
+        <tr class="tableHeader"><th>Field name</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+      <% END %>
+      <tr>
+      <td><% p.name | html %></td>
+      <td><% p.desc | html %></td>
+      </tr>
+      <% IF loop.last() %>
+        </tbody>
+        </table>
+        <br />
+      <% END %>
+    <% END %>
+  <% END %>
+<% END %>
+
+<% IF examples %>
+  <h3>Example Queries:</h3>
+  <ul>
+  <% FOREACH example IN examples %>
+    <li class="ExampleURI">    <a href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
+  <% END %>
+  </ul>
+<% END %>
+</div>
+</div>

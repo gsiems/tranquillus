@@ -1,0 +1,28 @@
+
+<p><a href="/">Home</a> |
+<a href="/<% module_prefix %>"><% module_name %></a> |
+<% data_route %>
+</p>
+<hr/>
+<div class="mainBox">
+  <div class="dashboard">
+    <table>
+      <tr>
+        <th>Documentation score:</th>
+        <td>Route: <% pct_route_desc %>%</td>
+        <td>Fields: <% pct_field_desc %>%</td>
+      </tr>
+      <% IF smoketest %><tr>
+
+      </tr><% END %>
+    </table>
+  </div>
+<div class="mainBoxContent">
+
+<h1>Configuration for "<% data_route %>":</h1>
+<pre>
+<% route_config %>
+</pre>
+
+</div>
+</div>

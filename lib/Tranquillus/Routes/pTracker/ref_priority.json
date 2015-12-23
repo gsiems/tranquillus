@@ -1,0 +1,32 @@
+{
+   "link" : "ref/priority",
+   "desc" : "Reference table. Priority values for anything where having a priority is desired.",
+   "from" : "FROM ref_priority a",
+   "order_by" : "ORDER BY a.priority_level",
+   "version" : "1",
+   "examples" : [
+      "?format=text"
+   ],
+   "fields" : [
+      {
+         "desc" : "The system ID for a the priority level.",
+         "name" : "ID",
+         "db_column" : "id"
+      },
+      {
+         "desc" : "The level assigned to a priority. Higher numbers are higher priorities. Useful for calculating combined/average/weighted priorities.",
+         "name" : "level",
+         "db_column" : "priority_level"
+      },
+      {
+         "desc" : "The name given to a priority level.",
+         "name" : "name",
+         "db_column" : "priority_name"
+      },
+      {
+         "desc" : "An (optional) description of a priority level.",
+         "name" : "description",
+         "db_column" : "priority_description"
+      }
+   ]
+}

@@ -1,0 +1,27 @@
+{
+   "link" : "ref/project-status",
+   "desc" : "Reference table. Status values for projects.",
+   "from" : "FROM ref_project_status a",
+   "order_by" : "ORDER BY a.sort_order",
+   "version" : "1",
+   "examples" : [
+      "?format=text"
+   ],
+   "fields" : [
+      {
+         "desc" : "The system ID for a the project status.",
+         "name" : "ID",
+         "db_column" : "id"
+      },
+      {
+         "desc" : "The name given to a project status.",
+         "name" : "name",
+         "db_column" : "status_name"
+      },
+      {
+         "desc" : "An (optional) description of a project status.",
+         "name" : "description",
+         "db_column" : "status_description"
+      }
+   ]
+}
