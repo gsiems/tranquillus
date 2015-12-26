@@ -20,11 +20,14 @@
   <div class="mainBoxContent">
     <% IF routes %><h3><% module_name %>:</h3>
       <% IF description %><p><% description %></p><% END %>
+      <% IF routes && routes.size %>
       <h4>The following routes are understood:</h4>
       <ul><% FOREACH r IN routes %>
         <li class="ResourceURI"><a href="<% r.doc_route %>"><% r.doc_route %></a></li>
       <% END %></ul>
+      <% ELSE %><p>This module has no routes.</p><% END %>
     <% END %>
+
   </div>
 </div>
 
