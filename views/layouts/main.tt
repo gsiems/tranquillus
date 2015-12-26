@@ -18,7 +18,7 @@ ENV: <% environment %>
 </pre>
 
 <div id="footer">
-Powered by <a href="http://perldancer.org/">Dancer</a>
+Powered by <a href="http://perldancer.org/">Dancer</a> and <a href="https://github.com/gsiems/tranquillus">tranquillus</a>
 </div>
 </body>
 </html>
