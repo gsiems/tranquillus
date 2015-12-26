@@ -246,7 +246,6 @@ sub header_info {
     return ( $format, $file_name, $disposition, @header );
 }
 
-
 sub _whoami {
     my @whoami = caller;
     return @whoami;
