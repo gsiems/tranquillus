@@ -20,7 +20,9 @@ my $routes_dir = "$lib_dir/Tranquillus/Routes";
 setup_modules($routes_dir);
 
 foreach my $cfg ( sort keys %index ) {
-    push @module_list, $index{$cfg};
+    if ( !$index{$cfg}{hide_doc} ) {
+        push @module_list, $index{$cfg};
+    }
 }
 
 =pod setup_modules
@@ -51,13 +53,21 @@ sub setup_modules {
         else {
             my ($config_dir) = $file =~ m/^(.+)\.pm/;
             $module->setup_routes( \%index, $config_dir );
+
             push @modules, $module;
+
         }
     }
 }
 
 get '/' => sub {
-    template 'index', { 'module_list' => \@module_list };
+
+    if (@errors) {
+        template 'index', { 'module_list' => \@module_list, errors => \@errors };
+    }
+    else {
+        template 'index', { 'module_list' => \@module_list };
+    }
 };
 
 true;
