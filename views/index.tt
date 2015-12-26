@@ -10,8 +10,7 @@
     <ul><% FOREACH a IN module_list %>
       <li><strong><a href="<% a.route %>"><% a.module_name %></a>:</strong>
       <br/><% a.description %>
-      <% IF a.dev_url %> Developer documentation can be found <a href="<% a.dev_url %>">here</a>.</p><% END %>
     </li><% END %>
-    </ul>
+  </ul>
 </div>
 </div>

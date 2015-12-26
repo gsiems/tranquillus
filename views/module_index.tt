@@ -24,8 +24,7 @@
       <ul><% FOREACH r IN routes %>
         <li class="ResourceURI"><a href="<% r.doc_route %>"><% r.doc_route %></a></li>
       <% END %></ul>
-      <% END %>
-    <% IF dev_url %><p>Developer documentation can be found <a href="<% dev_url %>">here</a>.</p><% END %>
+    <% END %>
   </div>
 </div>
 
