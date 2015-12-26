@@ -45,7 +45,7 @@ sub setup_routes {
 
     # Get the "auto-discovered" routes
     my $module_config =
-        Tranquillus::Config->read_configs( $config_dir, $arg_parse_rules, $module_name, $module_prefix );
+        Tranquillus::Config->read_configs( $config_dir, $arg_parse_rules, $module_name, $module_prefix, $description );
     my @routes = @{ $module_config->{routes} };
 
     # Add the "auto-discovered" data routes
