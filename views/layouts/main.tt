@@ -13,9 +13,9 @@
 <pre><% e %></pre>
 <% END %><% END %>
 
-<pre>
-ENV: <% environment %>
-</pre>
+<% IF settings.environment != 'production' %><pre>
+ENV: <% settings.environment %>
+</pre><% END %>
 
 <div id="footer">
 Powered by <a href="http://perldancer.org/">Dancer</a> and <a href="https://github.com/gsiems/tranquillus">tranquillus</a>
