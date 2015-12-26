@@ -9,9 +9,9 @@
 <body>
 <% content %>
 
-<% IF dev_data %><pre>
-<% dev_data %>
-</pre><% END %>
+<% IF errors %><% FOR e = errors %>
+<pre><% e %></pre>
+<% END %><% END %>
 
 <pre>
 ENV: <% environment %>
