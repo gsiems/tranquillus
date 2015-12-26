@@ -57,24 +57,7 @@ sub setup_modules {
 }
 
 get '/' => sub {
-
-    if ( config->{environment} eq 'development' ) {
-        my %h = (
-            'lib_dir'     => $lib_dir,
-            'route_mods'  => \@route_mods,
-            'modules'     => \@modules,
-            'errors'      => \@errors,
-            'module_list' => Dumper \@module_list,
-            'index'       => \%index,
-            'route_mods'  => \@route_mods,
-        );
-
-        template 'index', { 'dev_data' => Dumper \%h, 'module_list' => \@module_list };
-    }
-    else {
-        template 'index', { 'module_list' => \@module_list };
-    }
-
+    template 'index', { 'module_list' => \@module_list };
 };
 
 true;
