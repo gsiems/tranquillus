@@ -13,7 +13,7 @@ my $documentation_root =
 sub read_configs {
     my $self;
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ( $config_dir, $arg_parse_rules, $module_name, $module_prefix, $description ) = @_;
+    my ( $config_dir, $arg_parse_rules, $module_name, $module_prefix, $description, $hide_doc ) = @_;
 
     # Ensure that there is *something* for the description
     $description ||= 'TODO';
@@ -98,7 +98,7 @@ sub read_configs {
                     # TODO: If the configuration uses a 'WITH' clause
                     # then the 'FROM' clause wil not be the appropriate
                     # place to get the table name from.
-                    if (exists $h->{from}) {
+                    if ( exists $h->{from} ) {
                         my ( undef, $db_table ) = split /\s+/, $h->{from};
                         if ($db_table) {
                             $h->{db_table} = $db_table;
@@ -129,21 +129,27 @@ sub read_configs {
         'pct_field_desc'  => $pct_field_desc,
     );
 
-    # Module documentation
-    get "/$module_prefix(|/)" => sub {
-        template 'module_index', \%return;
-    };
+    if ( ( config->{environment} eq 'development' ) || !$hide_doc ) {
 
-    # Add the "auto-discovered" documentation routes
-    foreach my $config (@routes) {
+        # Module documentation
+        get "/$module_prefix(|/)" => sub {
+            template 'module_index', \%return;
+        };
 
-        my $show_doc = ( config->{environment} eq 'development' )
-            || ( !exists $config->{hide_doc} );
-        if ($show_doc) {
-            my $doc_route = $config->{doc_route};
-            warn "Setting up route: $doc_route\n";
-            get "$doc_route" => sub { Tranquillus::Doc->do_doc($config) };
+        # Add the "auto-discovered" documentation routes
+        foreach my $config (@routes) {
+
+            my $show_doc = ( config->{environment} eq 'development' )
+                || ( !exists $config->{hide_doc} );
+            if ($show_doc) {
+                my $doc_route = $config->{doc_route};
+                warn "Setting up route: $doc_route\n";
+                get "$doc_route" => sub { Tranquillus::Doc->do_doc($config) };
+            }
         }
+    }
+    else {
+        $return{hide_doc} = 1;
     }
 
     return \%return;
