@@ -20,7 +20,7 @@ my $routes_dir = "$lib_dir/Tranquillus/Routes";
 setup_modules($routes_dir);
 
 foreach my $cfg ( sort keys %index ) {
-    if ( !$index{$cfg}{hide_doc} ) {
+    if ( config->{environment} eq 'development' || !$index{$cfg}{hide_doc} ) {
         push @module_list, $index{$cfg};
     }
 }
