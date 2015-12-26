@@ -23,14 +23,14 @@ sub do_data {
         redirect '/';
     }
 
-    my $valid_parms = get_valid_parms($rt_config);
+    my $valid_parms = Tranquillus::Util->get_valid_parms($rt_config);
 
     my $query = prep_query( $rt_config, $valid_parms );
 
     if ( exists $rt_config->{format} ) {
         $query->{format} = $rt_config->{format};
     }
-    $query->{invalid_parms}      = get_invalid_parms($rt_config);
+    $query->{invalid_parms}      = Tranquillus::Util->get_invalid_parms($rt_config);
     $query->{deprecation_policy} = $deprecation_policy;
 
     Tranquillus::DB::Result->return_query_result($query);
@@ -211,59 +211,6 @@ sub generate_query {
     }
 
     return %return;
-}
-
-sub get_valid_parms {
-    my $self;
-    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ($rt_config) = @_;
-    my %valid_parms;
-
-    my %p;
-    foreach my $field ( @{ $rt_config->{fields} } ) {
-        my $name = $field->{name};
-        my $query_field = ( exists $field->{query_field} && $field->{query_field} );
-        $p{$name} = $query_field;
-    }
-    foreach my $field ( @{ $rt_config->{format_fields} } ) {
-        my $name = $field->{name};
-        $p{$name} = 1;
-    }
-
-    foreach my $name ( keys params ) {
-        if ( exists $p{$name} && $p{$name} ) {
-            $valid_parms{$name} = params->{$name};
-        }
-    }
-    return \%valid_parms;
-}
-
-sub get_invalid_parms {
-    my $self;
-    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ($rt_config) = @_;
-    my %invalid_parms;
-
-    my %p;
-    foreach my $field ( @{ $rt_config->{fields} } ) {
-        my $name = $field->{name};
-        my $query_field = ( exists $field->{query_field} && $field->{query_field} );
-        $p{$name} = $query_field;
-    }
-    foreach my $field ( @{ $rt_config->{format_fields} } ) {
-        my $name = $field->{name};
-        $p{$name} = 1;
-    }
-
-    foreach my $name ( keys params ) {
-        unless ( exists $p{$name} && $p{$name} ) {
-            my $value = params->{$name};
-            $value =~ s/[^a-zA-Z0-9_]/_/g;    # just say no to XSS
-
-            $invalid_parms{$name} = $value;
-        }
-    }
-    return \%invalid_parms;
 }
 
 sub parse_query_parms {

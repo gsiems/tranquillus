@@ -246,6 +246,59 @@ sub header_info {
     return ( $format, $file_name, $disposition, @header );
 }
 
+sub get_valid_parms {
+    my $self;
+    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
+    my ($rt_config) = @_;
+    my %valid_parms;
+
+    my %p;
+    foreach my $field ( @{ $rt_config->{fields} } ) {
+        my $name = $field->{name};
+        my $query_field = ( exists $field->{query_field} && $field->{query_field} );
+        $p{$name} = $query_field;
+    }
+    foreach my $field ( @{ $rt_config->{format_fields} } ) {
+        my $name = $field->{name};
+        $p{$name} = 1;
+    }
+
+    foreach my $name ( keys params ) {
+        if ( exists $p{$name} && $p{$name} ) {
+            $valid_parms{$name} = params->{$name};
+        }
+    }
+    return \%valid_parms;
+}
+
+sub get_invalid_parms {
+    my $self;
+    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
+    my ($rt_config) = @_;
+    my %invalid_parms;
+
+    my %p;
+    foreach my $field ( @{ $rt_config->{fields} } ) {
+        my $name = $field->{name};
+        my $query_field = ( exists $field->{query_field} && $field->{query_field} );
+        $p{$name} = $query_field;
+    }
+    foreach my $field ( @{ $rt_config->{format_fields} } ) {
+        my $name = $field->{name};
+        $p{$name} = 1;
+    }
+
+    foreach my $name ( keys params ) {
+        unless ( exists $p{$name} && $p{$name} ) {
+            my $value = params->{$name};
+            $value =~ s/[^a-zA-Z0-9_]/_/g;    # just say no to XSS
+
+            $invalid_parms{$name} = $value;
+        }
+    }
+    return \%invalid_parms;
+}
+
 sub _whoami {
     my @whoami = caller;
     return @whoami;
