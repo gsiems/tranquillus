@@ -99,8 +99,6 @@ sub standard_result {
     my ( $format, $file_name, $disposition, @headers );
     ( $format, $file_name, $disposition, @headers ) = Tranquillus::Util->header_info( $args->{format} );
 
-    warn "Format is $format\n";
-
     if ( $args->{errors} ) {
         header( 'Content-Type' => 'text/html' );
 
@@ -112,8 +110,6 @@ sub standard_result {
     else {
 
         for ( my $i = 0 ; $i < $#headers ; $i += 2 ) {
-            warn $headers[$i] . " => " . $headers[ $i + 1 ] . "\n";
-
             header( $headers[$i] => $headers[ $i + 1 ] );
         }
 
