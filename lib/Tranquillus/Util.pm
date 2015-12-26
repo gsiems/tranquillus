@@ -225,6 +225,28 @@ sub requested_callback {
     return $callback;
 }
 
+sub header_info {
+    my $self;
+    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
+    my ($format) = @_;
+
+    $format = response_format($format);
+
+    my ( $content_type, $file_name, $disposition ) = content_info($format);
+
+    my ( $k, $v ) = cache_control();
+    my $powered_by = "Perl Dancer " . $Dancer2::VERSION;
+    my @header     = (
+        $k             => $v,
+        'Server'       => $powered_by,
+        'Content-Type' => $content_type,
+        'X-Powered-By' => $powered_by
+    );
+
+    return ( $format, $file_name, $disposition, @header );
+}
+
+
 sub _whoami {
     my @whoami = caller;
     return @whoami;

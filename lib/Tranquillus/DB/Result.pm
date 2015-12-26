@@ -71,7 +71,7 @@ sub standard_result {
         }
     }
 
-    # What was I thinking?
+    # TODO: What was I thinking?
     foreach my $key ( keys %{$args} ) {
         $return{$key} = $args->{$key}
             unless ( $key =~
@@ -97,7 +97,7 @@ sub standard_result {
     my $return_text = '';
 
     my ( $format, $file_name, $disposition, @headers );
-    ( $format, $file_name, $disposition, @headers ) = header_info( $args->{format} );
+    ( $format, $file_name, $disposition, @headers ) = Tranquillus::Util->header_info( $args->{format} );
 
     warn "Format is $format\n";
 
@@ -184,7 +184,7 @@ sub stream_result {
         my @vars = ( exists $args->{vars} ) ? @{ $args->{vars} } : ();
         $sth->execute(@vars);
 
-        my ( $format, $file_name, $disposition, @header ) = header_info( $args->{format} );
+        my ( $format, $file_name, $disposition, @header ) = Tranquillus::Util->header_info( $args->{format} );
         my @column_names = @{ $args->{column_names} };
 
         # Default null value
@@ -263,27 +263,6 @@ sub stream_result {
             return $response;
         }
     }
-}
-
-sub header_info {
-    my $self;
-    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ($format) = @_;
-
-    $format = Tranquillus::Util->response_format($format);
-
-    my ( $content_type, $file_name, $disposition ) = Tranquillus::Util->content_info($format);
-
-    my ( $k, $v ) = Tranquillus::Util->cache_control();
-    my $powered_by = "Perl Dancer " . $Dancer2::VERSION;
-    my @header     = (
-        $k             => $v,
-        'Server'       => $powered_by,
-        'Content-Type' => $content_type,
-        'X-Powered-By' => $powered_by
-    );
-
-    return ( $format, $file_name, $disposition, @header );
 }
 
 sub get_jhead {
