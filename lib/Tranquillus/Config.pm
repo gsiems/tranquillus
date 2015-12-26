@@ -98,9 +98,11 @@ sub read_configs {
                     # TODO: If the configuration uses a 'WITH' clause
                     # then the 'FROM' clause wil not be the appropriate
                     # place to get the table name from.
-                    my ( undef, $db_table ) = split /\s+/, $h->{from};
-                    if ($db_table) {
-                        $h->{db_table} = $db_table;
+                    if (exists $h->{from}) {
+                        my ( undef, $db_table ) = split /\s+/, $h->{from};
+                        if ($db_table) {
+                            $h->{db_table} = $db_table;
+                        }
                     }
                 }
 
