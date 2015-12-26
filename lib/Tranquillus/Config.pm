@@ -26,7 +26,9 @@ sub read_configs {
 
     # Moderately bogus measure of how acceptable the module description is
     my $wc = () = $description =~ m/([^\s]\s+[^\s])/g;
-    my $pct_module_desc  = ( $wc > 6 ) ? 100 : 0;
+    $wc += 1;
+    my $pct_module_desc = ( $wc > 7 ) ? 100 : int( $wc * 100 / 7 );
+
     my $route_desc_count = 0;
     my $field_desc_count = 0;
     my $field_count      = 0;
