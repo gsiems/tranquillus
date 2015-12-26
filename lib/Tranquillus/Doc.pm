@@ -16,16 +16,21 @@ sub do_doc {
         # TODO: Fill out the remainder of the list
         foreach my $key (
             qw(
+            custom_data
             database
+            db_engine
             desc
             examples
             fields
             from
             link
+            no_global_parms
+            no_paging
             order_by
             parms_optional
+            use_streaming
             version
-            custom_data
+            with
             )
             )
         {
