@@ -3,7 +3,7 @@ use Dancer2 appname => 'Tranquillus';
 
 use Tranquillus::Config;
 use Tranquillus::Doc;
-use Tranquillus::DB::Query;
+use Tranquillus::DB;
 
 my $module_name   = 'NoRoutes';
 my $description   = 'An example module with no routes-- not that it makes any sense to have such a thing.';
@@ -38,7 +38,7 @@ sub setup_routes {
     foreach my $config (@routes) {
         if ( !exists $config->{custom_data} ) {
             my $data_route = $config->{data_route};
-            get "$data_route" => sub { Tranquillus::DB::Query->do_data($config) };
+            get "$data_route" => sub { Tranquillus::DB->do_data($config) };
         }
     }
 
