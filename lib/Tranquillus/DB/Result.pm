@@ -4,6 +4,7 @@ use Dancer2 appname => 'Tranquillus';
 use DateTime;
 use Tranquillus::Util;
 use Tranquillus::DB::Connection;
+use Tranquillus::Data;
 use Data::Dumper;
 
 sub return_query_result {
@@ -31,17 +32,16 @@ sub return_query_result {
 sub standard_result {
     my $self;
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ($args) = @_;
+    my ($query) = @_;
 
-    my %return;
     my @data;
-    my @column_names = @{ $args->{column_names} };
+    my @column_names = @{ $query->{column_names} };
 
-    my $dbh = Tranquillus::DB::Connection->get_dbh( $args->{database} );
+    my $dbh = Tranquillus::DB::Connection->get_dbh( $query->{database} );
 
     if ($dbh) {
 
-        my $sth = $dbh->prepare( $args->{query} );
+        my $sth = $dbh->prepare( $query->{query} );
         unless ($sth) {
             if ( config->{environment} eq 'development' ) {
                 Tranquillus::Util->return_error( 'BAD_QUERY', $dbh->errstr );
@@ -51,7 +51,7 @@ sub standard_result {
             }
         }
 
-        my @vars = ( exists $args->{vars} ) ? @{ $args->{vars} } : ();
+        my @vars = ( exists $query->{vars} ) ? @{ $query->{vars} } : ();
 
         if (@vars) {
             $sth->execute(@vars);
@@ -60,7 +60,7 @@ sub standard_result {
             $sth->execute();
         }
 
-        my $null_value = Tranquillus::Util->null_value( $args->{nullValue} );
+        my $null_value = Tranquillus::Util->null_value( $query->{nullValue} );
 
         foreach my $row ( @{ $sth->fetchall_arrayref() } ) {
             my %h;
@@ -71,95 +71,19 @@ sub standard_result {
         }
     }
 
-    # TODO: What was I thinking?
-    foreach my $key ( keys %{$args} ) {
-        $return{$key} = $args->{$key}
-            unless ( $key =~
-            m/^(vars|params|format|valid_parms|invalid_params|deprecated|parms_optional|query|loop_query|loop_args)$/ );
-    }
+    my %result = (
+        format           => $query->{format},
+        deprecated       => $query->{deprecated},
+        deprecated_by    => $query->{deprecated_by},
+        deprecated_until => $query->{deprecated_until},
+        valid_parms      => $query->{valid_parms},
+        invalid_parms    => $query->{invalid_parms},
+        column_names     => $query->{column_names},
+    );
 
-    $return{data} = \@data;
+    $result{data} = \@data;
 
-    $return{deprecated} = ( $args->{deprecated}{status} ) ? 'true' : 'false';
-
-    if ( $args->{deprecated_by} ) {
-        $return{deprecated_by} = $args->{deprecated_by};
-    }
-    if ( $args->{deprecated_until} ) {
-        $return{deprecated_until} = $args->{deprecated_until};
-    }
-
-    $return{uri} = request->path;
-    if ( exists $return{data} ) {
-        $return{recordCount} = scalar @{ $return{data} };
-    }
-
-    my $return_text = '';
-
-    my ( $format, $file_name, $disposition, @headers );
-    ( $format, $file_name, $disposition, @headers ) = Tranquillus::Util->header_info( $args->{format} );
-
-    if ( $args->{errors} ) {
-        header( 'Content-Type' => 'text/html' );
-
-        $return_text =
-              "<html><head></head><body><pre>\n"
-            . to_json( \%return, { ascii => 1, pretty => 1 } )
-            . "\n</pre></body></html>\n";
-    }
-    else {
-
-        for ( my $i = 0 ; $i < $#headers ; $i += 2 ) {
-            header( $headers[$i] => $headers[ $i + 1 ] );
-        }
-
-        # [JSON AS] TEXT
-        if ( $format eq 'text' ) {
-            $return_text =
-                  "<html><head></head><body><pre>\n"
-                . to_json( \%return, { ascii => 1, pretty => 1 } )
-                . "\n</pre></body></html>\n";
-        }
-
-        # JSON
-        elsif ( $format eq 'json' ) {
-            $return_text = to_json( \%return, { ascii => 1 } );
-        }
-
-        # JSON-P
-        elsif ( $format eq 'jsonp' ) {
-            my $callback = Tranquillus::Util->requested_callback();
-            $return_text = $callback . "(" . to_json( \%return, { ascii => 1 } ) . ");";
-        }
-        elsif ($format eq 'tab'
-            || $format eq 'csv'
-            || $format eq 'ods'
-            || $format eq 'xls' )
-        {
-            header( 'Content-Disposition' => $disposition );
-
-            if (@column_names) {
-                $return_text = Tranquillus::Util->a2delimited( $format, @column_names );
-
-                foreach my $row (@data) {
-                    my @a =
-                        map { ( defined $row->{$_} ) ? $row->{$_} : '' } @column_names;
-                    $return_text .= Tranquillus::Util->a2delimited( $format, @a );
-                }
-            }
-        }
-        else {
-            $return_text = to_json( \%return, { ascii => 1, pretty => 1 } );
-        }
-    }
-
-    # Not sure if this helps reduce memory usage or not...
-    delete $args->{$_} for ( keys %{$args} );
-    undef $args;
-    delete $return{$_} for ( keys %return );
-    undef %return;
-
-    return $return_text;
+    Tranquillus::Result->return_result( \%result );
 }
 
 sub stream_result {
