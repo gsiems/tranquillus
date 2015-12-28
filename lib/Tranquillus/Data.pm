@@ -8,7 +8,7 @@ sub return_custom_data {
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
     my ( $rt_config, $result ) = @_;
 
-    my $deprecation_policy = Tranquillus::Util->deprecation_policy($config);
+    my $deprecation_policy = Tranquillus::Util->deprecation_policy($rt_config);
     if ( $deprecation_policy->{status} == 2 ) {
 
         # TODO: redirect or error of some form? 404? Is there a best
@@ -46,7 +46,7 @@ sub return_result {
     $return{invalid_parms}      = $result->{invalid_parms};
     $return{column_names}       = \@column_names;
     $return{deprecation_policy} = $result->{deprecation_policy};
-    $return{deprecated}         = ( $deprecation_policy->{status} ) ? 'true' : 'false';
+    $return{deprecated}         = ( $result->{deprecation_policy}{status} ) ? 'true' : 'false';
 
     if ( $result->{deprecated_by} ) {
         $return{deprecated_by} = $result->{deprecated_by};

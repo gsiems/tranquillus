@@ -83,7 +83,7 @@ sub standard_result {
 
     $result{data} = \@data;
 
-    Tranquillus::Result->return_result( \%result );
+    Tranquillus::Data->return_result( \%result );
 }
 
 sub stream_result {
