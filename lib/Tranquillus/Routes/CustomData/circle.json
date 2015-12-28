@@ -1,0 +1,33 @@
+{
+   "link" : "circle",
+   "desc" : "Calculate properties of a circle.",
+   "version" : "1",
+   "custom_data" : 1,
+   "no_paging" : 1,
+   "examples" : [
+      "?radius=4&format=text"
+   ],
+   "fields" : [
+      {
+         "desc" : "The radius of the circle.",
+         "name" : "radius",
+         "db_column" : "radius",
+         "query_field" : 2
+      },
+      {
+         "desc" : "The diameter of the circle",
+         "name" : "diameter",
+         "db_column" : "diameter"
+      },
+      {
+         "desc" : "The area of the circle",
+         "name" : "area",
+         "db_column" : "area"
+      },
+      {
+         "desc" : "The circumference of the circle",
+         "name" : "circumference",
+         "db_column" : "circumference"
+      }
+   ]
+}
