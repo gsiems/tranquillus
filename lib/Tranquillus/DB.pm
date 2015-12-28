@@ -10,10 +10,6 @@ sub do_data {
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
     my ($rt_config) = @_;
 
-    # TODO: cleanup/streamline the "config" flow
-    # %args should revert to $args,
-    # functions should not add to it but should create their own return
-
     my $deprecation_policy = Tranquillus::Util->deprecation_policy($rt_config);
     if ( $deprecation_policy->{status} == 2 ) {
 
