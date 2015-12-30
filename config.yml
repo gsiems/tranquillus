@@ -20,10 +20,9 @@ charset: "UTF-8"
 
 #template: "simple"
 
-documentation_root: "/api/doc/vVERSION"
-
 data_root: "/api/vVERSION"
-
+documentation_root: "/api/doc/vVERSION"
+config_root : "/api/config/vVERSION"
 
 template: "template_toolkit"
 engines:

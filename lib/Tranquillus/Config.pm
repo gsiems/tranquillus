@@ -9,6 +9,10 @@ my $documentation_root =
     ( exists config->{documentation_root} )
     ? config->{documentation_root}
     : '/api/doc/vVERSION';
+my $config_root =
+    ( exists config->{config_root} )
+    ? config->{config_root}
+    : '/api/config/vVERSION';
 
 sub read_configs {
     my $self;
@@ -97,6 +101,10 @@ sub read_configs {
 
                 if ( config->{environment} eq 'development' ) {
 
+                    my $config_route = join '/', $config_root, $module_prefix, $h->{link};
+                    $config_route =~ s/VERSION/$h->{version}/;
+                    $h->{config_route} = $config_route;
+
                     # TODO: If the configuration uses a 'WITH' clause
                     # then the 'FROM' clause wil not be the appropriate
                     # place to get the table name from.
@@ -147,6 +155,11 @@ sub read_configs {
                 my $doc_route = $config->{doc_route};
                 warn "Setting up route: $doc_route\n";
                 get "$doc_route" => sub { Tranquillus::Doc->do_doc($config) };
+            }
+
+            if ( config->{environment} eq 'development' ) {
+                my $config_route = $config->{config_route};
+                get "$config_route" => sub { Tranquillus::Doc->do_config($config) };
             }
         }
     }
@@ -268,15 +281,6 @@ sub global_query_parms {
                 query_field => 1,
             },
         );
-    }
-
-    if ( config->{environment} eq 'development' ) {
-        my %h = (
-            name        => 'showConfig',
-            desc        => 'Development mode only. Returns the configuration used for the route.',
-            query_field => 1,
-        );
-        push @parms, \%h;
     }
 
     # Paging

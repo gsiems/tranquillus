@@ -18,7 +18,9 @@
     </table>
   </div>
 <div class="mainBoxContent">
-
+<% IF environment == 'development' %>
+  <% IF config_route %><p><a href="<% config_route %>">Configuration</a></p><% END %>
+<% END %>
 <h1>Documentation for "<% data_route %>":</h1>
 <h2>Description:</h2>
 <p><% desc %></p>

@@ -2,6 +2,8 @@
 <p><a href="/">Home</a> |
 <a href="/<% module_prefix %>"><% module_name %></a> |
 <% data_route %>
+
+
 </p>
 <hr/>
 <div class="mainBox">
@@ -18,6 +20,7 @@
     </table>
   </div>
 <div class="mainBoxContent">
+<% IF doc_route %><p><a href="<% doc_route %>">Documentation</a></p><% END %>
 
 <h1>Configuration for "<% data_route %>":</h1>
 <pre>

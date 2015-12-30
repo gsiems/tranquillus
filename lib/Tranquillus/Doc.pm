@@ -7,7 +7,54 @@ sub do_doc {
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
     my ($args) = @_;
 
-    if ( config->{environment} eq 'development' && exists params->{showConfig} ) {
+    my %h = %{$args};
+
+    my @query_fields;
+    my @result_fields;
+
+    foreach my $field ( @{ $args->{fields} } ) {
+        if ( exists $field->{query_field} && $field->{query_field} ) {
+            push @query_fields, $field;
+        }
+        if ( exists $field->{db_column} && $field->{db_column} ) {
+            push @result_fields, $field;
+        }
+    }
+
+    # Are there query fields:
+    if (@query_fields) {
+
+        # Are the query fields optional or required?
+        my $parms_optional = $args->{parms_optional}
+            || ( scalar @query_fields > 1 );
+
+        foreach my $field (@query_fields) {
+            if ( $field->{query_field} > 1 ) {
+                $field->{required} = 'Yes';
+            }
+            elsif ( !$parms_optional ) {
+                $field->{required} = 'Yes';
+            }
+        }
+        $h{query_fields} = \@query_fields;
+    }
+
+    # Are there result fields:
+    if (@result_fields) {
+        $h{result_fields} = \@result_fields;
+    }
+
+    $h{environment} = config->{environment};
+
+    template 'route_doc', \%h;
+}
+
+sub do_config {
+    my $self;
+    $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
+    my ($args) = @_;
+
+    if ( config->{environment} eq 'development' ) {
 
         my %h;
         my %t;
@@ -42,52 +89,9 @@ sub do_doc {
 
         $h{route_config} = to_json( \%t, { ascii => 1, pretty => 1 } );
 
-        $h{$_} = $args->{$_} for (qw(module_prefix module_name doc_route data_route pct_route_desc pct_field_desc ));
+        $h{$_} = $args->{$_} for (qw(module_prefix module_name doc_route data_route config_route pct_route_desc pct_field_desc ));
 
         template 'route_config', \%h;
-
-    }
-    else {
-        my %h = %{$args};
-
-        my @query_fields;
-        my @result_fields;
-
-        foreach my $field ( @{ $args->{fields} } ) {
-            if ( exists $field->{query_field} && $field->{query_field} ) {
-                push @query_fields, $field;
-            }
-            if ( exists $field->{db_column} && $field->{db_column} ) {
-                push @result_fields, $field;
-            }
-        }
-
-        # Are there query fields:
-        if (@query_fields) {
-
-            # Are the query fields optional or required?
-            my $parms_optional = $args->{parms_optional}
-                || ( scalar @query_fields > 1 );
-
-            foreach my $field (@query_fields) {
-                if ( $field->{query_field} > 1 ) {
-                    $field->{required} = 'Yes';
-                }
-                elsif ( !$parms_optional ) {
-                    $field->{required} = 'Yes';
-                }
-            }
-            $h{query_fields} = \@query_fields;
-        }
-
-        # Are there result fields:
-        if (@result_fields) {
-            $h{result_fields} = \@result_fields;
-        }
-
-        $h{environment} = config->{environment};
-
-        template 'route_doc', \%h;
     }
 }
 
