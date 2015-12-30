@@ -54,6 +54,10 @@ my %error_codes = (
         'text' => 'Service Unavailable: An attempt was made to connect to a misconfigured database.',
         'code' => 503,
     },
+    'BAD_RT_CONF' => {
+        'text' => 'Service Unavailable: An attempt was made to use a misconfigured route.',
+        'code' => 503,
+    },
     'NOT_FOUND' => {
         'text' => 'Document cannot be found.',
         'code' => 404,
