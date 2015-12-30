@@ -15,17 +15,18 @@ Primarily for database reporting. Can be used with other sources.
  * Examples in the configuration become part of the "smoke test" for the route (TODO).
 
 * "Standard" routes vs non-standard routes.
- * The standard route
-  * Uses database query for the data.
-  * The configuration has everything needed for building the DB queries.
-  * Postgres and Oracle supported (so far).
-  * No additional (route specific) coding required.
 
- * Non-standard routes
-  * The configuration is the same as the standard case.
-  * The configuration is still used to provide documentation and smoke tests.
-  * Except that the functionality for the data route is custom.
-  * Can proxy other services (TODO).
+* Standard routes
+ * Uses database query for the data.
+ * The configuration has everything needed for building the DB query.
+ * Postgres and Oracle supported (so far).
+ * No additional (route specific) coding required.
+
+* Non-standard routes
+ * The configuration is the same as the standard case.
+ * The configuration is still used to provide documentation and smoke tests.
+ * Except that the functionality for the data route is custom.
+ * Can proxy other services (TODO).
 
 * Support for large and/or slow queries
  * Uses streaming to return the data.
