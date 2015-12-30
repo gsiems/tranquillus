@@ -75,6 +75,7 @@ sub do_config {
             no_paging
             order_by
             parms_optional
+            search_suggetion_size
             use_streaming
             version
             with
@@ -89,7 +90,8 @@ sub do_config {
 
         $h{route_config} = to_json( \%t, { ascii => 1, pretty => 1 } );
 
-        $h{$_} = $args->{$_} for (qw(module_prefix module_name doc_route data_route config_route pct_route_desc pct_field_desc ));
+        $h{$_} = $args->{$_}
+            for (qw(module_prefix module_name doc_route data_route config_route pct_route_desc pct_field_desc ));
 
         template 'route_config', \%h;
     }
