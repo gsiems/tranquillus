@@ -24,8 +24,8 @@ sub return_query_result {
     # TODO: determine whether or not to use streaming to return the
     # query results.
 
-    #stream_result($query);
-    standard_result($query);
+    stream_result($query);
+    #standard_result($query);
 
 }
 
@@ -101,8 +101,14 @@ sub stream_result {
             Tranquillus::Util->return_error('BAD_QUERY');
         }
 
+        # If an array of arrays has been supplied for the vars then we
+        # want to loop through the outer array and perform a select
+        # using each inner array as the query parms. If only a simple
+        # array has been passed then only do the one query with the
+        # @vars as the query parms.
+
         my @vars = ( exists $args->{vars} ) ? @{ $args->{vars} } : ();
-        $sth->execute(@vars);
+        my $use_loop = ( $vars[0] && ref( $vars[0] ) && ref( $vars[0] ) eq 'ARRAY' ) ? 1 : 0;
 
         my ( $format, $file_name, $disposition, @header ) = Tranquillus::Util->header_info( $args->{format} );
         my @column_names = @{ $args->{column_names} };
@@ -122,12 +128,27 @@ sub stream_result {
 
                 $writer->write( Tranquillus::Util->a2delimited( $format, @column_names ) );
 
-                while (
-                    my @data =
-                    map { ( defined $_ ) ? $_ : $null_value } $sth->fetchrow_array()
-                    )
-                {
-                    $writer->write( Tranquillus::Util->a2delimited( $format, @data ) );
+                if ($use_loop) {
+                    foreach my $loop_vars (@vars) {
+                        $sth->execute( @{$loop_vars} );
+                        while (
+                            my @data =
+                            map { ( defined $_ ) ? $_ : $null_value } $sth->fetchrow_array()
+                            )
+                        {
+                            $writer->write( Tranquillus::Util->a2delimited( $format, @data ) );
+                        }
+                    }
+                }
+                else {
+                    $sth->execute(@vars);
+                    while (
+                        my @data =
+                        map { ( defined $_ ) ? $_ : $null_value } $sth->fetchrow_array()
+                        )
+                    {
+                        $writer->write( Tranquillus::Util->a2delimited( $format, @data ) );
+                    }
                 }
 
                 $writer->close;
@@ -152,19 +173,42 @@ sub stream_result {
                 my $writer  = $respond->( [ 206, [@header] ] );
                 $writer->write($jhead);
                 my $recordcount = 0;
-                while (
-                    my @data =
-                    map { ( defined $_ ) ? $_ : $null_value } $sth->fetchrow_array()
-                    )
-                {
-                    my %h =
-                        map { $column_names[$_] => ( defined $data[$_] ) ? $data[$_] : $null_value }
-                        ( 0 .. $#column_names );
-                    my $rec = ($recordcount) ? $rec_delimiter : '';
-                    $rec .= to_json( \%h, { ascii => 1, pretty => $json_pretty } );
-                    $rec =~ s/\n$//;
-                    $writer->write($rec);
-                    $recordcount++;
+
+                if ($use_loop) {
+                    foreach my $loop_vars (@vars) {
+                        $sth->execute( @{$loop_vars} );
+                        while (
+                            my @data =
+                            map { ( defined $_ ) ? $_ : $null_value } $sth->fetchrow_array()
+                            )
+                        {
+                            my %h =
+                                map { $column_names[$_] => ( defined $data[$_] ) ? $data[$_] : $null_value }
+                                ( 0 .. $#column_names );
+                            my $rec = ($recordcount) ? $rec_delimiter : '';
+                            $rec .= to_json( \%h, { ascii => 1, pretty => $json_pretty } );
+                            $rec =~ s/\n$//;
+                            $writer->write($rec);
+                            $recordcount++;
+                        }
+                    }
+                }
+                else {
+                    $sth->execute(@vars);
+                    while (
+                        my @data =
+                        map { ( defined $_ ) ? $_ : $null_value } $sth->fetchrow_array()
+                        )
+                    {
+                        my %h =
+                            map { $column_names[$_] => ( defined $data[$_] ) ? $data[$_] : $null_value }
+                            ( 0 .. $#column_names );
+                        my $rec = ($recordcount) ? $rec_delimiter : '';
+                        $rec .= to_json( \%h, { ascii => 1, pretty => $json_pretty } );
+                        $rec =~ s/\n$//;
+                        $writer->write($rec);
+                        $recordcount++;
+                    }
                 }
 
                 $jtail =~ s/REC_COUNT/$recordcount/;
