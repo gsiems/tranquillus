@@ -5,6 +5,8 @@ use Tranquillus::Config;
 use Tranquillus::Doc;
 use Tranquillus::DB;
 use Tranquillus::Data;
+use Tranquillus::Util;
+use Tranquillus::Proxy;
 
 use Data::Dumper;
 
@@ -14,7 +16,7 @@ my $module_prefix = 'custom-data';
 my $module_config;
 
 sub arg_parse_rules {
-    my %arg_parse_rules;
+    my %arg_parse_rules = ( name => { where_type => 'text', re => '[^A-Za-z0-9.-]', }, );
     return \%arg_parse_rules;
 }
 
@@ -51,6 +53,9 @@ sub setup_routes {
             my $data_route = $config->{data_route};
             if ( $link eq 'circle' ) {
                 get "$data_route" => sub { circle($config) };
+            }
+            elsif ( $link eq 'epub' ) {
+                get "$data_route" => sub { get_epub($config) };
             }
         }
     }
@@ -90,6 +95,31 @@ sub circle {
     }
 
     Tranquillus::Data->return_custom_data( $rt_config, \%result );
+}
+
+sub get_epub {
+    my $rt_config = shift;
+
+    my $valid_parms = Tranquillus::Util->get_valid_parms($rt_config);
+
+    my $base_route = "http://www.gutenberg.org/cache/epub";
+
+    my $file_name;
+    if ( exists $valid_parms->{file} ) {
+        $file_name = $valid_parms->{file};
+    }
+    unless ($file_name) {
+        Tranquillus::Util->return_error( 'BAD_QUERY', "No filename" );
+    }
+    my ($file_id) = $file_name =~ m/(\d+)/;
+
+    unless ($file_id) {
+        Tranquillus::Util->return_error( 'BAD_QUERY', "No file id" );
+    }
+
+    my $file_route = join( '/', $base_route, $file_id, $file_name );
+
+    Tranquillus::Proxy->proxy_request( $file_route, $file_name );
 }
 
 true;

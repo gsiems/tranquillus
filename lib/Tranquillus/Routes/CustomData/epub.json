@@ -1,0 +1,18 @@
+{
+   "link" : "epub",
+   "desc" : "Download an epub from http://www.gutenberg.org/.",
+   "version" : "1",
+   "custom_data" : 1,
+   "no_paging" : 1,
+   "examples" : [
+      "?file=pg50774.epub"
+   ],
+   "fields" : [
+      {
+         "desc" : "The filename to download.",
+         "name" : "file",
+         "db_column" : "file",
+         "query_field" : 2
+      }
+   ]
+}

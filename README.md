@@ -26,7 +26,7 @@ Primarily for database reporting. Can be used with other sources.
  * The configuration is the same as the standard case.
  * The configuration is still used to provide documentation and smoke tests.
  * Except that the functionality for the data route is custom.
- * Can proxy other services (TODO).
+ * Can proxy other services.
 
 * Support for large and/or slow queries
  * Uses streaming to return the data.
