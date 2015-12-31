@@ -285,20 +285,21 @@ sub global_query_parms {
 
     # Paging
     unless ( $no_paging || $no_params ) {
-        my %h = (
+
+        push @parms,
+            {
             name => 'limit',
             desc => 'The number of records to limit the result set to. Behaves like the SQL standard LIMIT clause.',
             query_field => 1,
-        );
-        push @parms, \%h;
+            };
 
-        %h = (
+        push @parms,
+            {
             name => 'offset',
             desc =>
                 'Used with Limit-- the record number to start retrieving from. Behaves like the SQL standard OFFSET clause.',
             query_field => 1,
-        );
-        push @parms, \%h;
+            };
     }
 
     return @parms;
