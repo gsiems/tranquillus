@@ -168,7 +168,7 @@
   <h3>Example Queries:</h3>
   <ul>
   <% FOREACH example IN examples %>
-    <li class="ExampleURI">    <a href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
+    <li class="ExampleURI"><a href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
   <% END %>
   </ul>
 <% END %>
