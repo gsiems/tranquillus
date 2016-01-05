@@ -19,14 +19,17 @@ sub return_query_result {
     }
     $query->{format} = Tranquillus::Util->response_format( $query->{format} );
 
-    # TODO: cleanup/streamline the "config" flow
-
-    # TODO: determine whether or not to use streaming to return the
+    # Determine whether or not to use streaming to return the
     # query results.
-
-    stream_result($query);
-    #standard_result($query);
-
+    if ( $query->{use_streaming} ) {
+        stream_result($query);
+    }
+    elsif ( exists $query->{vars} && ref( $query->{vars} ) eq 'ARRAY' && ref( @{ $query->{vars} }[0] ) eq 'ARRAY' ) {
+        stream_result($query);
+    }
+    else {
+        standard_result($query);
+    }
 }
 
 sub standard_result {

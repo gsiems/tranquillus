@@ -29,6 +29,9 @@ sub do_data {
     }
     $query->{invalid_parms}      = Tranquillus::Util->get_invalid_parms($rt_config);
     $query->{deprecation_policy} = $deprecation_policy;
+    if ( $rt_config->{use_streaming} ) {
+        $query->{use_streaming} = 1;
+    }
 
     Tranquillus::DB::Result->return_query_result($query);
 }
