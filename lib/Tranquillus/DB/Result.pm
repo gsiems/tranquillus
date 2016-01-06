@@ -28,6 +28,7 @@ sub return_query_result {
         stream_result($query);
     }
     else {
+        # Store-and-Forward
         standard_result($query);
     }
 }
@@ -127,7 +128,8 @@ sub stream_result {
 
             my $cb = sub {
                 my $respond = $Dancer2::Core::Route::RESPONDER;
-                my $writer = $respond->( [ 206, [ @header, 'Content-Disposition' => $disposition ] ] );
+                my $writer  = $respond->(
+                    [ 206, [ @header, 'Transfer-Encoding' => 'chunked', 'Content-Disposition' => $disposition ] ] );
 
                 $writer->write( Tranquillus::Util->a2delimited( $format, @column_names ) );
 
@@ -154,6 +156,8 @@ sub stream_result {
                     }
                 }
 
+                $writer->write(undef);
+                $writer->write("\r\n");
                 $writer->close;
             };
 
@@ -173,7 +177,7 @@ sub stream_result {
             my $cb = sub {
                 my $first   = 1;
                 my $respond = $Dancer2::Core::Route::RESPONDER;
-                my $writer  = $respond->( [ 206, [@header] ] );
+                my $writer  = $respond->( [ 206, [ @header, 'Transfer-Encoding' => 'chunked' ] ] );
                 $writer->write($jhead);
                 my $recordcount = 0;
 
@@ -215,7 +219,9 @@ sub stream_result {
                 }
 
                 $jtail =~ s/REC_COUNT/$recordcount/;
-                $writer->write( $jtail . "\n" );
+                $writer->write($jtail);
+                $writer->write(undef);
+                $writer->write("\r\n");
 
                 $writer->close;
             };

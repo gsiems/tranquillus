@@ -27,13 +27,21 @@ sub proxy_request {
                 if ( not $writer ) {
                     my $h = $response->headers;
 
-                    my @ary = ( 'Content-Length', 'Content-Type', 'Last-Modified', 'Content-Disposition' );
+                    my @ary =
+                        ( 'Cache-Control', 'Content-Length', 'Content-Type', 'Last-Modified', 'Content-Disposition' );
 
                     foreach my $key (@ary) {
                         if ( $h->header($key) ) {
                             $m{$key} = $h->header($key);
                         }
                     }
+                    unless ( exists $m{'Content-Length'} ) {
+                        # RFC 7230
+                        # http://tools.ietf.org/html/rfc7230#section-4
+
+                        $m{'Transfer-Encoding'} = 'chunked';
+                    }
+
                     if ($file_name) {
                         $m{'Content-Disposition'} ||= 'attachment; filename="' . $file_name . '"';
                     }
@@ -42,11 +50,9 @@ sub proxy_request {
                 $writer->write($data);
             },
         );
-        unless ( exists $m{'Content-Length'} ) {
-            # How to indicate EOF???
-            # Transfer-Encoding: chunked???
-            #$writer->write(chr(0) . chr(10) . chr(13));
-            #$writer->write( chr(10) . chr(13));
+        if ( exists $m{'Transfer-Encoding'} ) {
+            $writer->write(undef);
+            $writer->write("\r\n");
         }
         $writer->close;
     };
