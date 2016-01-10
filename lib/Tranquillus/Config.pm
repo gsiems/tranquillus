@@ -52,13 +52,13 @@ sub read_configs {
             closedir $dh;
 
             foreach my $file (@config_files) {
-                my $config = _slurp($file);
+                my $rt_config = _slurp($file);
                 my $h;
                 if ( $file =~ m/\.json$/i ) {
-                    $h = JSON::from_json( $config, { utf8 => 1 } );
+                    $h = JSON::from_json( $rt_config, { utf8 => 1 } );
                 }
                 else {
-                    $h = YAML::Load( decode( 'UTF-8', $config ) );
+                    $h = YAML::Load( decode( 'UTF-8', $rt_config ) );
                 }
 
                 # Ensure that there is a version number for the route
@@ -139,7 +139,7 @@ sub read_configs {
         'pct_field_desc'  => $pct_field_desc,
     );
 
-    if ( ( config->{environment} eq 'development' ) || !$hide_doc ) {
+    if ( ( config->{show_hidden_doc} && config->{show_hidden_doc} ) || !$hide_doc ) {
 
         # Module documentation
         get "/$module_prefix(|/)" => sub {
@@ -147,19 +147,19 @@ sub read_configs {
         };
 
         # Add the "auto-discovered" documentation routes
-        foreach my $config (@routes) {
+        foreach my $rt_config (@routes) {
 
-            my $show_doc = ( config->{environment} eq 'development' )
-                || ( !exists $config->{hide_doc} );
+            my $show_doc = ( config->{show_hidden_doc} && config->{show_hidden_doc} )
+                || ( !exists $rt_config->{hide_doc} );
             if ($show_doc) {
-                my $doc_route = $config->{doc_route};
+                my $doc_route = $rt_config->{doc_route};
                 warn "Setting up route: $doc_route\n";
-                get "$doc_route" => sub { Tranquillus::Doc->do_doc($config) };
+                get "$doc_route" => sub { Tranquillus::Doc->do_doc($rt_config) };
             }
 
             if ( config->{environment} eq 'development' ) {
-                my $config_route = $config->{config_route};
-                get "$config_route" => sub { Tranquillus::Doc->do_config($config) };
+                my $config_route = $rt_config->{config_route};
+                get "$config_route" => sub { Tranquillus::Doc->do_config($rt_config) };
             }
         }
     }
