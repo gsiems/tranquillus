@@ -21,3 +21,7 @@ show_errors: 1
 
 # print the banner
 startup_info: 1
+
+# show_hidden_doc: show route documentation that is flagged as hidden
+# (hide_doc in the module and/or route configuration)
+show_hidden_doc: 1
