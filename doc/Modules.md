@@ -11,7 +11,7 @@ name. For example, the "Foo" module would be declared as
 * The simplest module has variables defining the module name,
 description, and "prefix" where prefix defines the portion of the route
 URLs specific to the module.
-* Modules also have an [parm_parse_rules](parm_parse_rules.md)
+* Modules also provide a [parm_parse_rules](parm_parse_rules.md)
 function that defines the rules for parsing the query parameters for
 the routes.
 * Modules may also have custom data functions for those routes that are

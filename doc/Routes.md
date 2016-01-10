@@ -60,7 +60,7 @@ application configuration file that indicates the database connection
 to use for retrieving the routes data. If no database is specified then
 the default database will be used.
 
-* **with: For database queries. Optional. Defines the CTE "WITH" clause
+* **with:** For database queries. Optional. Defines the CTE "WITH" clause
 to use in creating the database query.
 
 * **from:** For database queries. The database table/view to select

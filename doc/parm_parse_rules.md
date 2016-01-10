@@ -52,8 +52,11 @@ prefix plus underscore to change the behavior. Valid prefixes are:
     * *<:*  Less than the provided number.
     * *<>:* Not equal to the provided number.
 
-* **date:** Treat the parameter like a date. This can include a
-prefix plus underscore to change the behavior. Valid prefixes are:
+* **date:** Treat the parameter like a date. This can include a prefix
+plus underscore to change the behavior. Additionally, date ranges may
+be defined by supplying two, comma separated, dates (no prefix). This
+becomes "WHERE date_column BETWEEN date1 AND date2". Valid prefixes
+are:
 
     * *=:* Equal to. This is the default behavior.
     * *>=:* Greater than, or equal to, the provided date.
@@ -61,9 +64,6 @@ prefix plus underscore to change the behavior. Valid prefixes are:
     * *<=:* Less than, or equal to, the provided date.
     * *<:*  Less than the provided date.
     * *<>:* Not equal to the provided date.
-
-Date ranges may also be defined by supplying two, comma separated,
-dates. This becomes "WHERE date_column BETWEEN date1 AND date2".
 
 * **text:** Treat the parameter as plain text and match the entire
 field. This can include a prefix plus underscore to specify the case
