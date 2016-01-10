@@ -2,6 +2,7 @@ requires "Dancer2"                   => "0.163000";
 requires "DateTime"                  => "0";
 requires "Data::Dumper"              => "0";
 requires "POSIX"                     => "0";
+requires "DBIx::Connector"           => "0";
 
 recommends "DBD::Pg"          => "0";
 recommends "YAML"             => "0";
