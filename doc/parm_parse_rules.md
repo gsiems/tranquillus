@@ -69,10 +69,10 @@ are:
 field. This can include a prefix plus underscore to specify the case
 sensitivity of the match. Valid prefixes are:
 
-    * //cu:// Cast the parameter and the field to upper case "WHERE upper (column_name) = upper (parameter)".
-    * //cl:// Cast the parameter and the field to lower case "WHERE lower (column_name) = lower (parameter)".
-    * //iu:// Cast the parameter to upper case (the field is already upper case) "WHERE column_name = upper (parameter)".
-    * //il:// Cast the parameter to lower case (the field is already lower case) "WHERE column_name = lower (parameter)".
+    * *cu:* Cast the parameter and the field to upper case "WHERE upper (column_name) = upper (parameter)".
+    * *cl:* Cast the parameter and the field to lower case "WHERE lower (column_name) = lower (parameter)".
+    * *iu:* Cast the parameter to upper case (the field is already upper case) "WHERE column_name = upper (parameter)".
+    * *il:* Cast the parameter to lower case (the field is already lower case) "WHERE column_name = lower (parameter)".
 
 * **like:** The same as "text" above except that the match becomes
 anywhere in the field -- the same as the SQL LIKE clause.
