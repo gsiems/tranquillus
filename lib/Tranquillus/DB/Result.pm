@@ -47,7 +47,7 @@ sub standard_result {
 
         my $sth = $dbh->prepare( $query->{query} );
         unless ($sth) {
-            if ( config->{environment} eq 'development' ) {
+            if ( exists config->{show_errors} && config->{show_errors} ) {
                 Tranquillus::Util->return_error( 'BAD_QUERY', $dbh->errstr );
             }
             else {
