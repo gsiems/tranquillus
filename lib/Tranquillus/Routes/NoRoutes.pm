@@ -11,9 +11,9 @@ my $module_prefix = 'no-routes';
 
 my @routes;
 
-sub arg_parse_rules {
-    my %arg_parse_rules;
-    return \%arg_parse_rules;
+sub parm_parse_rules {
+    my %parm_parse_rules;
+    return \%parm_parse_rules;
 }
 
 ########################################################################
@@ -27,11 +27,11 @@ sub setup_routes {
     $index->{$module_name}{description} = $description;
     $index->{$module_name}{route}       = "/$module_prefix";
 
-    my $arg_parse_rules = arg_parse_rules();
+    my $parm_parse_rules = parm_parse_rules();
 
     # Get the "auto-discovered" routes
     my $module_config =
-        Tranquillus::Config->read_configs( $config_dir, $arg_parse_rules, $module_name, $module_prefix, $description );
+        Tranquillus::Config->read_configs( $config_dir, $parm_parse_rules, $module_name, $module_prefix, $description );
     my @routes = @{ $module_config->{routes} };
 
     # Add the "auto-discovered" data routes

@@ -17,7 +17,7 @@ my $config_root =
 sub read_configs {
     my $self;
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ( $config_dir, $arg_parse_rules, $module_name, $module_prefix, $description, $hide_doc ) = @_;
+    my ( $config_dir, $parm_parse_rules, $module_name, $module_prefix, $description, $hide_doc ) = @_;
 
     # Ensure that there is *something* for the description
     $description ||= 'TODO';
@@ -88,7 +88,7 @@ sub read_configs {
                 $h->{data_route} = $data_route;
 
                 #
-                $h = prime_config_fields( $h, $arg_parse_rules );
+                $h = prime_config_fields( $h, $parm_parse_rules );
 
                 my $no_paging = ( exists $h->{no_paging} ) ? $h->{no_paging} : 0;
                 my $no_params = ( exists $h->{no_params} ) ? $h->{no_params} : 0;
