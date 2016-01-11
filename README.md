@@ -6,10 +6,10 @@ Primarily for database reporting. Can be used with other sources.
 ## Features
 
 * Supports grouping of routes
- * Routes are grouped/organized into modules.
+ * Routes are grouped/organized into [modules](doc/Modules.md).
  * Each module is a perl module with configurations files
 
-* Uses JSON or YAML files for configuring routes
+* Uses JSON or YAML files for configuring [routes](doc/Routes.md)
  * One configuration file per route.
  * The configuration is also the documentation.
  * Examples in the configuration become part of the "smoke test" for the route (TODO).
@@ -30,7 +30,7 @@ Primarily for database reporting. Can be used with other sources.
 
 * Support for large and/or slow queries
  * Uses streaming to return the data.
- * Specified in the configuration (TODO).
+ * Specified in the configuration.
  * Can use sets of query parameters to possibly improve query performance.
 
 * Supports connections to multiple databases.
