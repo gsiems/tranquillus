@@ -16,11 +16,16 @@ sub return_custom_data {
         redirect '/';
     }
 
-    $result->{deprecation_policy} = $deprecation_policy;
-    $result->{format}             = $rt_config->{format};
-    $result->{deprecated}         = $rt_config->{deprecated};
-    $result->{deprecated_by}      = $rt_config->{deprecated_by};
-    $result->{deprecated_until}   = $rt_config->{deprecated_until};
+    #    $result->{deprecation_policy} = $deprecation_policy;
+    $result->{format}     = $rt_config->{format};
+    $result->{deprecated} = $rt_config->{deprecated};
+
+    if ( $rt_config->{deprecated_by} ) {
+        $result->{deprecated_by} = $rt_config->{deprecated_by};
+    }
+    if ( $rt_config->{deprecated_until} ) {
+        $result->{deprecated_until} = $rt_config->{deprecated_until};
+    }
 
     unless ( exists $result->{invalid_parms} ) {
         $result->{invalid_parms} = Tranquillus::Util->get_invalid_parms($rt_config);
@@ -42,11 +47,16 @@ sub return_result {
         @column_names = sort keys %{ @{ $result->{data} }[0] };
     }
 
-    $return{valid_parms}        = $result->{valid_parms};
-    $return{invalid_parms}      = $result->{invalid_parms};
-    $return{column_names}       = \@column_names;
-    $return{deprecation_policy} = $result->{deprecation_policy};
-    $return{deprecated}         = ( $result->{deprecation_policy}{status} ) ? 'true' : 'false';
+    $return{column_names} = \@column_names;
+    $return{deprecated} = ( $result->{deprecation_policy}{status} ) ? 'true' : 'false';
+    #    $return{deprecation_policy} = $result->{deprecation_policy};
+
+    if ( config->{environment} eq 'development' ) {
+        $return{invalid_parms} = $result->{invalid_parms};
+        $return{valid_parms}   = $result->{valid_parms};
+        $return{query}         = $result->{query};
+        $return{vars}          = $result->{vars};
+    }
 
     if ( $result->{deprecated_by} ) {
         $return{deprecated_by} = $result->{deprecated_by};

@@ -76,13 +76,15 @@ sub standard_result {
     }
 
     my %result = (
-        format           => $query->{format},
-        deprecated       => $query->{deprecated},
-        deprecated_by    => $query->{deprecated_by},
-        deprecated_until => $query->{deprecated_until},
-        valid_parms      => $query->{valid_parms},
-        invalid_parms    => $query->{invalid_parms},
         column_names     => $query->{column_names},
+        deprecated_by    => $query->{deprecated_by},
+        deprecated       => $query->{deprecated},
+        deprecated_until => $query->{deprecated_until},
+        format           => $query->{format},
+        invalid_parms    => $query->{invalid_parms},
+        query            => $query->{query},
+        valid_parms      => $query->{valid_parms},
+        vars             => $query->{vars},
     );
 
     $result{data} = \@data;
@@ -248,6 +250,13 @@ sub get_jhead {
         uri        => request->path,
         deprecated => ( $args->{deprecated}{status} ) ? 'true' : 'false',
     );
+
+    if ( config->{environment} eq 'development' ) {
+        $fore{invalid_parms} = $args->{invalid_parms};
+        $fore{valid_parms}   = $args->{valid_parms};
+        $fore{query}         = $args->{query};
+        $fore{vars}          = $args->{vars};
+    }
 
     if ( $args->{deprecated_by} ) {
         $fore{deprecated_by} = $args->{deprecated_by};
