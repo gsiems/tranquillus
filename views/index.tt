@@ -1,16 +1,12 @@
 <p>Home</p>
 <hr/>
-<% IF environment == 'development' OR environment == 'test' %>
-  <p>Smoke Test results are <a href="<% request.uri_base %>/smoke_test.html">here</a>.</p>
-<% END %>
 <div class="mainBox">
-<div class="mainBoxContent">
+  <div class="mainBoxContent">
     <h3>Modules:</h3>
     <p>The following ReSTful service modules are available.</p>
-    <ul><% FOREACH a IN module_list %>
-      <li><strong><a href="<% a.route %>"><% a.module_name %></a>:</strong>
-      <br/><% a.description %>
+    <% FOREACH a IN module_list %>
+    <h4 class="ContentsURI"><a href="<% a.route %>"><% a.module_name %></a>:</h4>
+    <p><% a.description %></p>
     </li><% END %>
-  </ul>
-</div>
+  </div>
 </div>
