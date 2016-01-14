@@ -36,7 +36,7 @@
   <% IF db_table %>
     <h4>DB Source:</h4>
     <% IF dictionary_link %>
-      <p><a href="<% dictionary_link %>"><% table | html %></a></p>
+      <p><a href="<% dictionary_link %>"><% db_table | html %></a></p>
     <% ELSE %>
       <p><% db_table | html %></p>
     <% END %>
