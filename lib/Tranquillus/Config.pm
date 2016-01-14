@@ -119,7 +119,7 @@ sub read_configs {
                 $field_count += scalar @{ $h->{fields} };
                 $field_desc_count += $h->{field_desc_count};
 
-                push @routes, $h;
+                unshift @routes, $h;
             }
         }
     }
