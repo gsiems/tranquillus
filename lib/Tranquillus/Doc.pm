@@ -65,11 +65,15 @@ sub do_config {
             qw(
             custom_data
             database
-            db_engine
+            deprecated_by
+            deprecated
+            deprecated_until
             desc
+            dictionary_link
             examples
             fields
             from
+            hide_doc
             link
             no_global_parms
             no_paging
