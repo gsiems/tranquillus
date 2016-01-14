@@ -21,6 +21,9 @@ configured route.
 
 * **desc:** The user friendly description of the route.
 
+* **dictionary_link:** Optional. The link to the data dictionary for
+the table/view in the From clause.
+
 * **hide_doc:** Optional {1, 0}. Used to indicate if the documentation
 should be hidden under normal circumstances. This can be overridden by
 setting "show_hidden_doc" in the application environment configuration.
@@ -74,7 +77,8 @@ fields) used by the route.
 
     * **name:** The (JSON) name for the field
 
-    * **desc:** The description of the field. Used in generating the user documentation.
+    * **desc:** The description of the field. Used in generating the
+    user documentation.
 
     * **db_column:** The database column to query the data from. The
     existance of this parameter is also used for determining which
@@ -104,7 +108,7 @@ fields) used by the route.
 
     * **where_exists:** For database queries where the query field maps to
     a one-to-many relationship for the query values, this contains the
-    definition for the "where exists" clause.
+    definition for the "WHERE EXISTS" clause.
 
     * **where_clause_col:** For database queries, if the where clause
     column is different than the db_column then that is specified here. ***Note***
@@ -129,6 +133,10 @@ been replaced by. The default is that there is no replacement route.
 * **deprecated_until:** Optional. The sunset date at which the
 deprecated route will cease to work. The format for the date is in the
 form "yyyy-mm-dd" with a default of no date.
+
+* **search_suggetion_size:** Optional. A non-standard route option used
+for secifying the length of the list returned by the
+do_search_suggestions function (Tranquillus::DB).
 
 ## Global parameters
 
