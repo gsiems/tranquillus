@@ -106,7 +106,7 @@ sub read_configs {
                     $h->{config_route} = $config_route;
 
                     # TODO: If the configuration uses a 'WITH' clause
-                    # then the 'FROM' clause wil not be the appropriate
+                    # then the 'FROM' clause will not be the appropriate
                     # place to get the table name from.
                     if ( exists $h->{from} ) {
                         my ( undef, $db_table ) = split /\s+/, $h->{from};
