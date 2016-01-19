@@ -19,7 +19,7 @@
   </div>
 <div class="mainBoxContent">
 <% IF environment == 'development' %>
-  <% IF config_route %><p><a href="<% config_route %>">Configuration</a></p><% END %>
+  <% IF config_route %><p><a class="ConfigLink" href="<% config_route %>">Configuration</a></p><% END %>
 <% END %>
 <h1>Documentation for "<% data_route %>":</h1>
 <h2>Description:</h2>
@@ -86,7 +86,7 @@
       <td><% p.name | html %></td>
       <td><% p.required | html %></td>
       <td><% p.desc | html %>
-      <% IF p.reference_href %> (Ref:<a href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
+      <% IF p.reference_href %> (Ref:<a class="refLink" href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
       </td>
       </tr>
     <% END %>
@@ -168,7 +168,7 @@
   <h3>Example Queries:</h3>
   <ul>
   <% FOREACH example IN examples %>
-    <li class="ExampleURI"><a href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
+    <li><a class="exampleLink" href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
   <% END %>
   </ul>
 <% END %>

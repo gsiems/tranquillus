@@ -5,7 +5,7 @@
     <h3>Modules:</h3>
     <p>The following ReSTful service modules are available.</p>
     <% FOREACH a IN module_list %>
-    <h4 class="ContentsURI"><a href="<% a.route %>"><% a.module_name %></a>:</h4>
+    <h4><a class="moduleLink" href="<% a.route %>"><% a.module_name %></a>:</h4>
     <p><% a.description %></p>
     </li><% END %>
   </div>

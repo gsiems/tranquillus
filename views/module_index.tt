@@ -23,7 +23,7 @@
       <% IF routes && routes.size %>
       <h4>The following routes are understood:</h4>
       <ul><% FOREACH r IN routes %>
-        <li class="ResourceURI"><a href="<% r.doc_route %>"><% r.doc_route %></a></li>
+        <li><a class="routeLink" href="<% r.doc_route %>"><% r.doc_route %></a></li>
       <% END %></ul>
       <% ELSE %><p>This module has no routes.</p><% END %>
     <% END %>
