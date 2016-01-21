@@ -70,8 +70,8 @@ sub get_dbh {
 
         # Not currently using SQLite, but that won't need a usename/password...
 
-        if ( exists $db_config->{$database}{dbi_parmas} ) {
-            $conn = DBIx::Connector->new( $dsn, $username, $password, $db_config->{$database}{dbi_parmas} );
+        if ( exists $db_config->{$database}{dbi_params} ) {
+            $conn = DBIx::Connector->new( $dsn, $username, $password, $db_config->{$database}{dbi_params} );
         }
         else {
             $conn = DBIx::Connector->new(
