@@ -62,6 +62,10 @@ my %error_codes = (
         'text' => 'Document cannot be found.',
         'code' => 404,
     },
+    'BAD_PROXY' => {
+        'text' => 'Service Unavailable: There was a failure to proxy the request.',
+        'code' => 502,
+    },
 );
 
 sub return_error {

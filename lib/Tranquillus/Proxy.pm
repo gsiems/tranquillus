@@ -47,14 +47,21 @@ sub proxy_request {
                     }
                     $writer = $respond->( [ $response->code, [%m] ] );
                 }
-                $writer->write($data);
+                # Ensure that we have a valid writer...
+                if ($writer) {
+                    $writer->write($data);
+                }
             },
         );
-        if ( exists $m{'Transfer-Encoding'} ) {
-            $writer->write(undef);
-            $writer->write("\r\n");
+        # Cleanup.
+        # Ensure that we have a valid writer...
+        if ($writer) {
+            if ( exists $m{'Transfer-Encoding'} ) {
+                $writer->write(undef);
+                $writer->write("\r\n");
+            }
+            $writer->close;
         }
-        $writer->close;
     };
 
     my $response = Dancer2::Core::Response::Delayed->new(
@@ -64,8 +71,8 @@ sub proxy_request {
         request  => $Dancer2::Core::Route::REQUEST,
         response => $Dancer2::Core::Route::RESPONSE,
     );
-    return $response;
 
+    return $response;
 }
 
 sub _whoami {
