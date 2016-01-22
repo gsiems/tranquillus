@@ -1,31 +1,26 @@
 
-<p><a href="/">Home</a> |
-<a href="/<% module_prefix %>"><% module_name %></a> |
-<% data_route %>
-
-
-</p>
-<hr/>
-<div class="mainBox">
-  <div class="dashboard">
-    <table>
-      <tr>
-        <th>Documentation score:</th>
-        <td>Route: <% pct_route_desc %>%</td>
-        <td>Fields: <% pct_field_desc %>%</td>
-      </tr>
-      <% IF smoketest %><tr>
-
-      </tr><% END %>
-    </table>
-  </div>
-<div class="mainBoxContent">
-<% IF doc_route %><p><a href="<% doc_route %>">Documentation</a></p><% END %>
+<div id="breadcrumbs">
+  <a href="/">Home</a> |
+  <a href="/<% module_prefix %>"><% module_name %></a> |
+  <% data_route %>
+</div>
 
 <h1>Configuration for "<% data_route %>":</h1>
-<pre>
-<% route_config %>
-</pre>
 
+<div id="dashboard">
+  <div><b>Documentation score:</b>
+    <span class="<% IF pct_route_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% pct_route_desc %>%</span>
+    <span class="<% IF pct_field_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% pct_field_desc %>%</span>
+  </div>
+
+  <% IF smoketest %><div>
+
+  </div><% END %>
 </div>
+
+<div id="page">
+  <% IF doc_route %><p><a href="<% doc_route %>">Documentation</a></p><% END %>
+  <pre>
+<% route_config %>
+  </pre>
 </div>

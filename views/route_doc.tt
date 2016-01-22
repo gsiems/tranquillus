@@ -1,51 +1,51 @@
+<div id="breadcrumbs">
+  <a href="/">Home</a> |
+  <a href="/<% module_prefix %>"><% module_name %></a> |
+  <% data_route %>
+</div>
 
-<p><a href="/">Home</a> |
-<a href="/<% module_prefix %>"><% module_name %></a> |
-<% data_route %>
-</p>
-<hr/>
-<div class="mainBox">
-  <div class="dashboard">
-    <table>
-      <tr>
-        <th>Documentation score:</th>
-        <td>Route: <% pct_route_desc %>%</td>
-        <td>Fields: <% pct_field_desc %>%</td>
-      </tr>
-      <% IF smoketest %><tr>
-
-      </tr><% END %>
-    </table>
-  </div>
-<div class="mainBoxContent">
-<% IF environment == 'development' %>
-  <% IF config_route %><p><a class="ConfigLink" href="<% config_route %>">Configuration</a></p><% END %>
-<% END %>
 <h1>Documentation for "<% data_route %>":</h1>
+
+<div id="dashboard">
+  <div><b>Documentation score:</b>
+    <span class="<% IF pct_route_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% pct_route_desc %>%</span>
+    <span class="<% IF pct_field_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% pct_field_desc %>%</span>
+  </div>
+
+  <% IF smoketest %><div>
+
+  </div><% END %>
+</div>
+
+<div id="page">
+<% IF environment == 'development' %>
+  <% IF config_route %><p><a class="configLink" href="<% config_route %>">Configuration</a></p><% END %>
+<% END %>
+
 <h2>Description:</h2>
-<p><% desc %></p>
+<div class="desc"><% desc %></div>
 
 <% IF deprecated %>
   <h2>Deprecation Notice:</h2>
-  <p>This route has been deprecated<% IF deprecated_until %> and will cease to function after<% deprecated_until %><% END %>.
+  <div class="desc">This route has been deprecated<% IF deprecated_until %> and will cease to function after<% deprecated_until %><% END %>.
   <% IF deprecated_by %>This route has been replaced by <a href="<% deprecated_by %>"><% deprecated_by %></a>.<% END %>
-</p>
+</div>
 <% END %>
 
 <% IF environment == 'development' %>
   <% IF db_table %>
-    <h4>DB Source:</h4>
-    <% IF dictionary_link %>
-      <p><a href="<% dictionary_link %>"><% db_table | html %></a></p>
+    <h2>DB Source:</h2>
+    <div class="desc"><% IF dictionary_link %>
+      <a href="<% dictionary_link %>"><% db_table | html %></a>
     <% ELSE %>
-      <p><% db_table | html %></p>
-    <% END %>
+      <% db_table | html %>
+    <% END %></div>
   <% END %>
 <% END %>
 
 <h2>Search parameters:</h2>
 <% IF query_fields %>
-  <p>One or more of the following search parameters<% IF parms_optional %> may be specified when retrieving data<% ELSE %> need to be specified in order to retrieve data<% END %>:</p>
+  <div class="desc">One or more of the following search parameters<% IF parms_optional %> may be specified when retrieving data<% ELSE %> need to be specified in order to retrieve data<% END %>:</div>
   <% IF environment == 'development' %>
     <table class="parameterTable">
     <% FOR  p IN query_fields %>
@@ -95,14 +95,14 @@
     <br />
   <% END %>
 <% ELSE %>
-  <p>There are no search parameters available for this route.</p>
+  <div class="desc">There are no search parameters available for this route.</div>
 <% END %>
 
 <% IF format_fields %>
   <% FOR  p IN format_fields %>
     <% IF loop.first() %>
       <h2>Additional parameters:</h2>
-      <p>The following, optional, parameters may be specified:</p>
+      <div class="desc">The following, optional, parameters may be specified:</div>
       <table class="parameterTable">
       <thead>
       <tr class="tableHeader"><th>Parameter name</th><th>Description</th></tr></thead>
@@ -165,12 +165,11 @@
 <% END %>
 
 <% IF examples %>
-  <h3>Example Queries:</h3>
+  <h2>Example Queries:</h2>
   <ul>
   <% FOREACH example IN examples %>
     <li><a class="exampleLink" href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
   <% END %>
   </ul>
 <% END %>
-</div>
 </div>

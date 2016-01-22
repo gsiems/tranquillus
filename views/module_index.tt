@@ -1,33 +1,30 @@
-<p><a href="/">Home</a> | <% module_name %></p>
-<hr/>
-
-<div class="mainBox">
-  <div class="dashboard">
-    <table>
-      <tr>
-        <th>Documentation score:</th>
-        <td>Module: <% pct_module_desc %>%</td>
-        <td>Routes: <% pct_route_desc %>%</td>
-        <td>Fields: <% pct_field_desc %>%</td>
-      </tr>
-      <% IF smoketest %><tr>
-
-      </tr><% END %>
-    </table>
-  </div>
-
-
-  <div class="mainBoxContent">
-    <% IF routes %><h3><% module_name %>:</h3>
-      <% IF description %><p><% description %></p><% END %>
-      <% IF routes && routes.size %>
-      <h4>The following routes are understood:</h4>
-      <ul><% FOREACH r IN routes %>
-        <li><a class="routeLink" href="<% r.doc_route %>"><% r.doc_route %></a></li>
-      <% END %></ul>
-      <% ELSE %><p>This module has no routes.</p><% END %>
-    <% END %>
-
-  </div>
+<div id="breadcrumbs">
+<a href="/">Home</a> | <% module_name %>
 </div>
 
+<% IF routes %><h1><% module_name %>:</h1><% END %>
+
+<div id="dashboard">
+  <div><b>Documentation score:</b>
+    <span class="<% IF pct_module_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Module: <% pct_module_desc %>%</span>
+    <span class="<% IF pct_route_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Routes: <% pct_route_desc %>%</span>
+    <span class="<% IF pct_field_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% pct_field_desc %>%</span>
+  </div>
+
+  <% IF smoketest %><div>
+
+  </div><% END %>
+</div>
+
+<div id="page">
+  <% IF routes %>
+    <% IF description %><div><% description %></div><% END %>
+
+    <% IF routes && routes.size %>
+    <h4>The following routes are understood:</h4>
+    <ul><% FOREACH r IN routes %>
+      <li><a class="routeLink" href="<% r.doc_route %>"><% r.doc_route %></a></li>
+    <% END %></ul>
+    <% ELSE %><p>This module has no routes.</p><% END %>
+  <% END %>
+</div>
