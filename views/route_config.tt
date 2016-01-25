@@ -1,7 +1,7 @@
 
 <div id="breadcrumbs">
   <a href="/">Home</a> |
-  <a href="/<% module_prefix %>"><% module_name %></a> |
+  <a href="/<% module_url_token %>"><% module_name %></a> |
   <% data_route %>
 </div>
 
@@ -9,8 +9,8 @@
 
 <div id="dashboard">
   <div><b>Documentation score:</b>
-    <span class="<% IF pct_route_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% pct_route_desc %>%</span>
-    <span class="<% IF pct_field_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% pct_field_desc %>%</span>
+    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% route_doc_score %></span>
+    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %></span>
   </div>
 
   <% IF smoketest %><div>

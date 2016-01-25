@@ -46,6 +46,9 @@ sub do_doc {
 
     $h{environment} = config->{environment};
 
+    #my $dev_doc = to_json( \%h, { ascii => 1, pretty => 1 } );
+    #$h{dev_doc} = $dev_doc;
+
     template 'route_doc', \%h;
 }
 
@@ -95,7 +98,7 @@ sub do_config {
         $h{route_config} = to_json( \%t, { ascii => 1, pretty => 1 } );
 
         $h{$_} = $args->{$_}
-            for (qw(module_prefix module_name doc_route data_route config_route pct_route_desc pct_field_desc ));
+            for (qw(module_url_token module_name doc_route data_route config_route route_doc_score field_doc_score ));
 
         template 'route_config', \%h;
     }

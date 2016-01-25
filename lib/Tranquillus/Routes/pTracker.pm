@@ -5,11 +5,9 @@ use Tranquillus::Config;
 use Tranquillus::Doc;
 use Tranquillus::DB;
 
-my $module_name   = 'pTracker';
-my $description   = 'Using pTracker tables as example RESTful reporting routes';
-my $module_prefix = 'ptracker';
-
-my @routes;
+my $module_name      = 'pTracker';
+my $description      = 'Using pTracker tables as example RESTful reporting routes';
+my $module_url_token = 'ptracker';
 
 sub parm_parse_rules {
     my %parm_parse_rules = (
@@ -37,16 +35,19 @@ sub parm_parse_rules {
 sub setup_routes {
     my ( $self, $index, $config_dir ) = @_;
 
-    $index->{$module_name}{module_name} = $module_name;
-    $index->{$module_name}{description} = $description;
-    $index->{$module_name}{route}       = "/$module_prefix";
-
-    my $parm_parse_rules = parm_parse_rules();
-
     # Get the "auto-discovered" routes
-    my $module_config =
-        Tranquillus::Config->read_configs( $config_dir, $parm_parse_rules, $module_name, $module_prefix, $description );
+    my $module_config = Tranquillus::Config->read_configs(
+        {
+            config_dir       => $config_dir,
+            description      => $description,
+            module_name      => $module_name,
+            module_url_token => $module_url_token,
+            parm_parse_rules => parm_parse_rules(),
+        }
+    );
     my @routes = @{ $module_config->{routes} };
+
+    $index->{$module_name} = $module_config;
 
     # Add the "auto-discovered" data routes
     foreach my $config (@routes) {

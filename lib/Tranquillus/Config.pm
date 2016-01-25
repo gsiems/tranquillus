@@ -17,25 +17,30 @@ my $config_root =
 sub read_configs {
     my $self;
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ( $config_dir, $parm_parse_rules, $module_name, $module_prefix, $description, $hide_doc ) = @_;
+    my ($args) = (@_);
 
+    my $config_dir = $args->{config_dir};
     # Ensure that there is *something* for the description
-    $description ||= 'TODO';
+    my $description = $args->{description} || 'TODO';
+    my $hide_doc    = $args->{hide_doc}    || 0;
+    my $module_name = $args->{module_name};
+    my $module_url_token = $args->{module_url_token};
+    my $parm_parse_rules = $args->{parm_parse_rules};
 
     # Use the length of the descriptions of modules, routes and fields
     # aid to encouraging some minimally viable (or much better) level of
     # documentation. While minimum length is a lousy metric it is quick,
     # easy, and should help the documenters find the routes that need
-    # help in that area.
+    # help in that area, maybe.
 
     # Moderately bogus measure of how acceptable the module description is
     my $wc = () = $description =~ m/([^\s]\s+[^\s])/g;
-    $wc += 1;
-    my $pct_module_desc = ( $wc > 7 ) ? 100 : int( $wc * 100 / 7 );
+    $wc++;
+    my $module_doc_score = ( $wc >= 7 ) ? 100 : int( $wc * 100 / 7 );
 
-    my $route_desc_count = 0;
-    my $field_desc_count = 0;
-    my $field_count      = 0;
+    my $route_doc_count = 0;
+    my $field_doc_count = 0;
+    my $field_count     = 0;
 
     my @routes;
 
@@ -70,20 +75,25 @@ sub read_configs {
                 # Moderately bogus measure of how acceptable the
                 # route description is
                 my $wc = () = $h->{desc} =~ m/([^\s]\s+[^\s])/g;
-                $h->{pct_route_desc} = ( $wc > 3 ) ? 100 : 0;
-                $route_desc_count++
-                    if ( $wc > 3 );    # Because "Valid values for x" is 3
+
+                # Because "Valid values for x" == 3
+                my $route_doc_score = ( $wc >= 3 ) ? 100 : int( $wc * 100 / 3 );
+                $h->{route_doc_score} = $route_doc_score;
+
+                if ( $wc >= 3 ) {
+                    $route_doc_count++;
+                }
 
                 #
-                $h->{module_name}   = $module_name;
-                $h->{module_prefix} = $module_prefix;
+                $h->{module_name}      = $module_name;
+                $h->{module_url_token} = $module_url_token;
                 $h->{database} ||= 'default';
 
-                my $doc_route = join '/', $documentation_root, $module_prefix, $h->{link};
+                my $doc_route = join '/', $documentation_root, $module_url_token, $h->{link};
                 $doc_route =~ s/VERSION/$h->{version}/;
                 $h->{doc_route} = $doc_route;
 
-                my $data_route = join '/', $data_root, $module_prefix, $h->{link};
+                my $data_route = join '/', $data_root, $module_url_token, $h->{link};
                 $data_route =~ s/VERSION/$h->{version}/;
                 $h->{data_route} = $data_route;
 
@@ -101,7 +111,7 @@ sub read_configs {
 
                 if ( config->{environment} eq 'development' ) {
 
-                    my $config_route = join '/', $config_root, $module_prefix, $h->{link};
+                    my $config_route = join '/', $config_root, $module_url_token, $h->{link};
                     $config_route =~ s/VERSION/$h->{version}/;
                     $h->{config_route} = $config_route;
 
@@ -117,32 +127,38 @@ sub read_configs {
                 }
 
                 $field_count += scalar @{ $h->{fields} };
-                $field_desc_count += $h->{field_desc_count};
+                $field_doc_count += $h->{field_doc_count};
 
                 unshift @routes, $h;
             }
         }
     }
 
-    my $route_count = scalar @routes;
-    my $pct_route_desc = ($route_count) ? int( $route_desc_count * 100 / $route_count ) : 100;
-
-    my $pct_field_desc = ($field_count) ? int( $field_desc_count * 100 / $field_count ) : 100;
+    my $route_count     = scalar @routes;
+    my $route_doc_score = ($route_count) ? int( $route_doc_count * 100 / $route_count ) : 100;
+    my $field_doc_score = ($field_count) ? int( $field_doc_count * 100 / $field_count ) : 100;
 
     my %return = (
-        'module_name'     => $module_name,
-        'description'     => $description,
-        'module_prefix'   => "/$module_prefix",
-        'routes'          => \@routes,
-        'pct_module_desc' => $pct_module_desc,
-        'pct_route_desc'  => $pct_route_desc,
-        'pct_field_desc'  => $pct_field_desc,
+        'module_name'      => $module_name,
+        'description'      => $description,
+        'module_url_token' => $module_url_token,
+        'routes'           => \@routes,
+        'module_doc_score' => $module_doc_score,
+        'route_doc_score'  => $route_doc_score,
+        'route_doc_count'  => $route_doc_count,
+        'route_count'      => $route_count,
+        'field_doc_score'  => $field_doc_score,
+        'field_doc_count'  => $field_doc_count,
+        'field_count'      => $field_count,
     );
 
     if ( ( config->{show_hidden_doc} && config->{show_hidden_doc} ) || !$hide_doc ) {
 
+        #my $dev_doc = to_json( \%return, { ascii => 1, pretty => 1 } );
+        #$return{dev_doc} = $dev_doc;
+
         # Module documentation
-        get "/$module_prefix(|/)" => sub {
+        get "/$module_url_token(|/)" => sub {
             template 'module_index', \%return;
         };
 
@@ -175,7 +191,7 @@ sub prime_config_fields {
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
     my ( $args, $pa ) = @_;
 
-    my $field_desc_count = 0;
+    my $field_doc_count = 0;    # Count of fields with *long enough* descriptions
 
     foreach my $idx ( 0 .. @{ $args->{fields} } ) {
         my $field = @{ $args->{fields} }[$idx];
@@ -186,8 +202,15 @@ sub prime_config_fields {
 
         # Moderately bogus measure of how acceptable the field description is
         my $wc = () = $field->{desc} =~ m/([^\s]\s+[^\s])/g;
-        $field_desc_count++
-            if ( $wc > 3 );    # Because "ID for the widget" scores a 3
+
+        $field->{field_doc_score} = ( $wc > 3 ) ? 100 : 0;
+
+        if ( $wc > 3 ) {
+
+            # Because "ID for the widget" scores a 3, and one hopes
+            # there is more to the description than that.
+            $field_doc_count++;
+        }
 
         # Check reference links
         if ( exists $field->{reference_href} ) {
@@ -243,8 +266,8 @@ sub prime_config_fields {
 
     my $field_count = scalar @{ $args->{fields} };
 
-    $args->{field_desc_count} = $field_desc_count;
-    $args->{pct_field_desc} = ($field_count) ? int( $field_desc_count * 100 / $field_count ) : 100;
+    $args->{field_doc_count} = $field_doc_count;
+    $args->{field_doc_score} = ($field_count) ? int( $field_doc_count * 100 / $field_count ) : 100;
 
     return $args;
 }

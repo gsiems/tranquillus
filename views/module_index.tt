@@ -6,9 +6,9 @@
 
 <div id="dashboard">
   <div><b>Documentation score:</b>
-    <span class="<% IF pct_module_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Module: <% pct_module_desc %>%</span>
-    <span class="<% IF pct_route_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Routes: <% pct_route_desc %>%</span>
-    <span class="<% IF pct_field_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% pct_field_desc %>%</span>
+    <span class="<% IF module_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Module: <% module_doc_score %></span>
+    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Routes: <% route_doc_score %></span>
+    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %></span>
   </div>
 
   <% IF smoketest %><div>
@@ -18,12 +18,14 @@
 
 <div id="page">
   <% IF routes %>
-    <% IF description %><div><% description %></div><% END %>
+    <% IF description %><div class="<% IF module_doc_score == 100 %>desc<% ELSE %>descWarn<% END %>"><% description %></div><% END %>
 
     <% IF routes && routes.size %>
     <h4>The following routes are understood:</h4>
     <ul><% FOREACH r IN routes %>
-      <li><a class="routeLink" href="<% r.doc_route %>"><% r.doc_route %></a></li>
+      <li>
+          <a class="routeLink" href="<% r.doc_route %>"><% r.doc_route %></a>:
+          <% IF r.route_doc_score != 100 OR r.field_doc_score != 100 %><span class="dbStatWarn">Documentation</span> <% END %><% r.desc %></li>
     <% END %></ul>
     <% ELSE %><p>This module has no routes.</p><% END %>
   <% END %>

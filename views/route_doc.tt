@@ -1,6 +1,6 @@
 <div id="breadcrumbs">
   <a href="/">Home</a> |
-  <a href="/<% module_prefix %>"><% module_name %></a> |
+  <a href="/<% module_url_token %>"><% module_name %></a> |
   <% data_route %>
 </div>
 
@@ -8,8 +8,8 @@
 
 <div id="dashboard">
   <div><b>Documentation score:</b>
-    <span class="<% IF pct_route_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% pct_route_desc %>%</span>
-    <span class="<% IF pct_field_desc == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% pct_field_desc %>%</span>
+    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% route_doc_score %></span>
+    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %></span>
   </div>
 
   <% IF smoketest %><div>
@@ -23,7 +23,7 @@
 <% END %>
 
 <h2>Description:</h2>
-<div class="desc"><% desc %></div>
+<div  class="<% IF route_doc_score == 100 %>desc<% ELSE %>warning<% END %>"><% desc %></div>
 
 <% IF deprecated %>
   <h2>Deprecation Notice:</h2>
@@ -65,7 +65,7 @@
         <% IF p.re %> (<% p.re %>)<% END %>
       <% END %>
       </td>
-      <td><% p.desc | html %>
+      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %>
       <% IF p.reference_href %> (Ref:<a href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
       </td>
       </tr>
@@ -85,7 +85,7 @@
       <tr>
       <td><% p.name | html %></td>
       <td><% p.required | html %></td>
-      <td><% p.desc | html %>
+      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %>
       <% IF p.reference_href %> (Ref:<a class="refLink" href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
       </td>
       </tr>
@@ -134,7 +134,7 @@
       <tr>
       <td><% p.name | html %></td>
       <td><% p.db_column | html %></td>
-      <td><% p.desc | html %></td>
+      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %></td>
       </tr>
       <% IF loop.last() %>
         </tbody>
@@ -153,7 +153,7 @@
       <% END %>
       <tr>
       <td><% p.name | html %></td>
-      <td><% p.desc | html %></td>
+      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %></td>
       </tr>
       <% IF loop.last() %>
         </tbody>
