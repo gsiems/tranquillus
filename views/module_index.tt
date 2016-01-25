@@ -6,9 +6,9 @@
 
 <div id="dashboard">
   <div><b>Documentation score:</b>
-    <span class="<% IF module_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Module: <% module_doc_score %></span>
-    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Routes: <% route_doc_score %></span>
-    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %></span>
+    <span class="<% IF module_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Module: <% module_doc_score %>%</span>
+    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Routes: <% route_doc_score %>%</span>
+    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %>%</span>
   </div>
 
   <% IF smoketest %><div>
@@ -18,7 +18,7 @@
 
 <div id="page">
   <% IF routes %>
-    <% IF description %><div class="<% IF module_doc_score == 100 %>desc<% ELSE %>descWarn<% END %>"><% description %></div><% END %>
+    <div class="desc"><span <% IF module_doc_score != 100 %>class="warning"<% END %>><% description %></span></div>
 
     <% IF routes && routes.size %>
     <h4>The following routes are understood:</h4>

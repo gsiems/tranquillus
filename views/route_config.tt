@@ -9,8 +9,8 @@
 
 <div id="dashboard">
   <div><b>Documentation score:</b>
-    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% route_doc_score %></span>
-    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %></span>
+    <span class="<% IF route_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Route: <% route_doc_score %>%</span>
+    <span class="<% IF field_doc_score == 100 %>dbStatGood<% ELSE %>dbStatWarn<% END %>">Fields: <% field_doc_score %>%</span>
   </div>
 
   <% IF smoketest %><div>
