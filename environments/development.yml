@@ -25,3 +25,14 @@ startup_info: 1
 # show_hidden_doc: show route documentation that is flagged as hidden
 # (hide_doc in the module and/or route configuration)
 show_hidden_doc: 1
+
+# show_config: Add links to and create routes for displaying the
+# configuration information for routes. Default is to not show the route
+# configuration.
+show_config: 1
+
+# show_developer_doc: Display additional developer information in the #
+# route documentation page and query results. Default is to not show
+# additional developer documentation.
+show_developer_doc: 1
+

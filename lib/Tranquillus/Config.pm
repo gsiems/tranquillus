@@ -108,12 +108,13 @@ sub read_configs {
                     $h->{format_fields} = \@gp;
                 }
 
-                if ( config->{environment} eq 'development' ) {
-
+                if ( config->{show_config} ) {
                     my $config_route = join '/', $config_root, $module_url_token, $h->{link};
                     $config_route =~ s/VERSION/$h->{version}/;
                     $h->{config_route} = $config_route;
+                }
 
+                if ( config->{show_developer_doc} ) {
                     # TODO: If the configuration uses a 'WITH' clause
                     # then the 'FROM' clause will not be the appropriate
                     # place to get the table name from.
@@ -172,7 +173,7 @@ sub read_configs {
                 get "$doc_route" => sub { Tranquillus::Doc->do_doc($rt_config) };
             }
 
-            if ( config->{environment} eq 'development' ) {
+            if ( config->{show_config} ) {
                 my $config_route = $rt_config->{config_route};
                 get "$config_route" => sub { Tranquillus::Doc->do_config($rt_config) };
             }

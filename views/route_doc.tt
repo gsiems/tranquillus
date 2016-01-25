@@ -18,7 +18,8 @@
 </div>
 
 <div id="page">
-<% IF environment == 'development' %>
+
+<% IF settings.show_config %>
   <% IF config_route %><p><a class="configLink" href="<% config_route %>">Configuration</a></p><% END %>
 <% END %>
 
@@ -32,7 +33,7 @@
 </div>
 <% END %>
 
-<% IF environment == 'development' %>
+<% IF settings.show_developer_doc %>
   <% IF db_table %>
     <h2>DB Source:</h2>
     <div class="desc"><% IF dictionary_link %>
@@ -46,7 +47,7 @@
 <h2>Search parameters:</h2>
 <% IF query_fields %>
   <div class="desc">One or more of the following search parameters<% IF parms_optional %> may be specified when retrieving data<% ELSE %> need to be specified in order to retrieve data<% END %>:</div>
-  <% IF environment == 'development' %>
+  <% IF settings.show_developer_doc %>
     <table class="parameterTable">
     <% FOR  p IN query_fields %>
       <% IF loop.first() %>
@@ -122,7 +123,7 @@
 
 <% IF result_fields %>
   <h2>Result Set Definitions:</h2>
-  <% IF environment == 'development' %>
+  <% IF settings.show_developer_doc %>
     <table class="parameterTable">
     <% FOR  p IN result_fields %>
       <% IF loop.first() %>

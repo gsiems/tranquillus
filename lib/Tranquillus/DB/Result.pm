@@ -251,7 +251,7 @@ sub get_jhead {
         deprecated => ( $args->{deprecated}{status} ) ? 'true' : 'false',
     );
 
-    if ( config->{environment} eq 'development' ) {
+    if ( config->{show_developer_doc} ) {
         $fore{invalid_parms} = $args->{invalid_parms};
         $fore{valid_parms}   = $args->{valid_parms};
         $fore{query}         = $args->{query};

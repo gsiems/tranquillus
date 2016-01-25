@@ -44,8 +44,6 @@ sub do_doc {
         $h{result_fields} = \@result_fields;
     }
 
-    $h{environment} = config->{environment};
-
     #my $dev_doc = to_json( \%h, { ascii => 1, pretty => 1 } );
     #$h{dev_doc} = $dev_doc;
 
@@ -57,7 +55,7 @@ sub do_config {
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
     my ($args) = @_;
 
-    if ( config->{environment} eq 'development' ) {
+    if ( config->{show_config} ) {
 
         my %h;
         my %t;
