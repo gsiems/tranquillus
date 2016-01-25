@@ -35,7 +35,6 @@ sub read_configs {
 
     # Moderately bogus measure of how acceptable the module description is
     my $wc = () = $description =~ m/([^\s]\s+[^\s])/g;
-    $wc++;
     my $module_doc_score = ( $wc >= 7 ) ? 100 : int( $wc * 100 / 7 );
 
     my $route_doc_count = 0;
