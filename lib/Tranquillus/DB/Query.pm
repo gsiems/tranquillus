@@ -391,6 +391,7 @@ sub parse_query_parm {
         elsif ($begin) {
             my ($operator) = $type =~ m/^([^_]+)_/;
             $operator ||= '=';
+
             $begin = parse_date($begin);
             if ($begin) {
                 my $where = "$where_col $operator to_date ( ? , 'yyyy-mm-dd' )";
@@ -509,7 +510,8 @@ sub parse_date {
 
     # 2015-12-16  |  2015-12-16 21:24:56  |  2015-12-16T21:24:56
     if ( $date =~ m/^([0-9]{2,4}?)[ -]+([0-9]{1,2}?)[ -]+([0-9]{1,2}?)/ ) {
-        ( $yr, $mon, $mday ) = ( $1, $2, $3 );
+        #( $yr, $mon, $mday ) = ( $1, $2, $3 );
+        ( $yr, $mon, $mday ) = split /[ T-]/, uc $date;
     }
 
     # 16 December 2015  |  16 December, 2015
