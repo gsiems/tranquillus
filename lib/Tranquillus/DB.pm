@@ -75,7 +75,7 @@ sub do_search_suggestions {
         }
     }
 
-    my @data;
+    my @data      = ();
     my $parm_name = $field->{name};
     my $q         = lc params->{$parm_name};
     $q =~ s/^\s+//;
@@ -119,13 +119,17 @@ sub do_search_suggestions {
         }
     }
 
-    my %valid_parms = ( $parm_name => params->{$parm_name} );
+    my %valid_parms = ( $parm_name => $q );
+    my @column_names = ($parm_name);
 
-    my $return = Tranquillus::Data->return_result(
-        data        => \@data,
-        valid_parms => \%valid_parms,
-        query       => $query,
+    my %rslt = (
+        valid_parms  => \%valid_parms,
+        column_names => \@column_names,
+        data         => \@data,
+        query        => $query,
     );
+
+    my $return = Tranquillus::Data->return_result( \%rslt );
 
     undef @data;
 
