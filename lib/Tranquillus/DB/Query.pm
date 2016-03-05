@@ -315,9 +315,11 @@ sub parse_query_parm {
     # "Numeric integer" fields
     if ( $type eq 'pos_int' ) {
 
+        $re ||= '[^0-9]';
+
         # The idea here is to allow selecting a limited list of ids
         # (assuming that the DB is using synthetic keys)
-        my @tokens = _tokenize_var( $parm, '\s*,\s*', $allow_limit );
+        my @tokens = _tokenize_var( $parm, '\s*,\s*', $re, $allow_limit );
         if (@tokens) {
             if ( scalar @tokens == 1 ) {
                 push @where_a, "$where_col = ?";
@@ -462,7 +464,7 @@ sub parse_query_parm {
             : ( $type =~ m/^cu_/ ) ? "upper ($where_col) "
             :                        "$where_col ";
 
-        my @tokens = _tokenize_var( $parm, '\s*,\s*', $allow_limit );
+        my @tokens = _tokenize_var( $parm, '\s*,\s*', $re, $allow_limit );
         if (@tokens) {
             if ( scalar @tokens == 1 ) {
                 push @where_a, "$where = ?";
@@ -577,8 +579,7 @@ sub _tokenize_var {
 
     my @tokens;
     if ($allow_limit) {
-        my @tokens = split /$splitter/, $var;
-
+        @tokens = split /$splitter/, $var;
         if ( scalar @tokens > $allow_limit ) {
             @tokens = @tokens[ 0 .. $allow_limit - 1 ];
         }
