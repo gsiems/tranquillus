@@ -2,7 +2,7 @@ package Tranquillus::Config;
 
 use Dancer2 appname => 'Tranquillus';
 use JSON ();
-use Data::Dumper;
+#use Data::Dumper;
 
 my $data_root = ( exists config->{data_root} ) ? config->{data_root} : '/api/vVERSION';
 my $documentation_root =
@@ -138,6 +138,8 @@ sub read_configs {
     my $route_doc_score = ($route_count) ? int( $route_doc_count * 100 / $route_count ) : 100;
     my $field_doc_score = ($field_count) ? int( $field_doc_count * 100 / $field_count ) : 100;
 
+    @routes = sort { $a->{link} cmp $b->{link} } @routes;
+
     my %return = (
         'module_name'      => $module_name,
         'description'      => $description,
@@ -203,9 +205,9 @@ sub prime_config_fields {
         # Moderately bogus measure of how acceptable the field description is
         my $wc = () = $field->{desc} =~ m/([^\s]\s+[^\s])/g;
 
-        $field->{field_doc_score} = ( $wc > 3 ) ? 100 : 0;
+        $field->{field_doc_score} = ( $wc >= 3 ) ? 100 : 0;
 
-        if ( $wc > 3 ) {
+        if ( $wc >= 3 ) {
 
             # Because "ID for the widget" scores a 3, and one hopes
             # there is more to the description than that.
@@ -225,11 +227,11 @@ sub prime_config_fields {
 
         my $name = $field->{name};
 
-        if ( exists $pa->{$name} ) {
-            $args->{fields}[$idx]{where_type} ||= $pa->{$name}{where_type};
-            if ( ( exists $pa->{$name}{re} ) && $pa->{$name}{re} ) {
-                $args->{fields}[$idx]{re} ||= $pa->{$field}{re};
-            }
+        unless ( $args->{fields}[$idx]{where_type} ) {
+            $args->{fields}[$idx]{where_type} = $pa->{$name}{where_type};
+        }
+        unless ( $args->{fields}[$idx]{re} ) {
+            $args->{fields}[$idx]{re} = $pa->{$name}{re};
         }
 
         # Ensure that there is a regexp for untainting the data
