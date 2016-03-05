@@ -119,8 +119,8 @@ sub do_search_suggestions {
         }
     }
 
-    my %valid_parms = ( $parm_name => $q );
-    my @column_names = ($parm_name);
+    my %valid_parms = ( $parm_name => params->{$parm_name} );
+    my @column_names = ();
 
     my %rslt = (
         valid_parms  => \%valid_parms,
