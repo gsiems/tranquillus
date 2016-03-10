@@ -591,7 +591,7 @@ sub _tokenize_var {
     my @vars;
     foreach my $token (@tokens) {
         $token =~ s/$scrubber//g;
-        if ($token) {
+        if ( defined $token && length($token) > 0 ) {
             push @vars, $token;
         }
     }
