@@ -33,6 +33,10 @@ sub do_data {
         $query->{use_streaming} = 1;
     }
 
+    if ( exists $valid_parms->{nullValue} ) {
+        $query->{nullValue} = $valid_parms->{nullValue};
+    }
+
     Tranquillus::DB::Result->return_query_result($query);
 }
 
