@@ -38,6 +38,22 @@ our %content_types = (
 );
 
 my %error_codes = (
+    'BAD_REQUEST' => {
+        'text' => "I don't understand your question.",
+        'code' => 400,
+    },
+    'FORBIDDEN' => {
+        'text' => "I'm sorry Dave. I can't let you do that.",
+        'code' => 403,
+    },
+    'NOT_FOUND' => {
+        'text' => 'Document cannot be found.',
+        'code' => 404,
+    },
+    'BAD_PROXY' => {
+        'text' => 'Service Unavailable: There was a failure to proxy the request.',
+        'code' => 502,
+    },
     'BAD_QUERY' => {
         'text' => 'Service Unavailable: Bad query.',
         'code' => 503,
@@ -58,14 +74,6 @@ my %error_codes = (
         'text' => 'Service Unavailable: An attempt was made to use a misconfigured route.',
         'code' => 503,
     },
-    'NOT_FOUND' => {
-        'text' => 'Document cannot be found.',
-        'code' => 404,
-    },
-    'BAD_PROXY' => {
-        'text' => 'Service Unavailable: There was a failure to proxy the request.',
-        'code' => 502,
-    },
 );
 
 sub return_error {
@@ -84,7 +92,7 @@ sub return_error {
     }
 
     if (@information) {
-        $text .= join( ' ', @information );
+        $text .= ' ' . join( ' ', @information );
     }
 
     send_error( $text, $code );
@@ -188,12 +196,17 @@ sub content_info {
 sub null_value {
     my $self;
     $self = shift if ( ( _whoami() )[1] ne (caller)[1] );
-    my ($default_null) = @_;
+    my ( $default_null, $format ) = @_;
+
+    $format = response_format($format) || '';
 
     # Allow the user to override the default undefined => "null" behavior
-    my $null_value = ( defined $default_null ) ? $default_null : 'null';
+    my $null_value =
+          ( defined $default_null ) ? $default_null
+        : ( defined $format && $format =~ m/^(tab|csv|xls|ods)/i ) ? '(null)'
+        :                                                            'null';
 
-    $null_value =~ s/[^a-z0-9 _-]//ig;    # just say no to XSS
+    $null_value =~ s/[^a-z0-9 _()-]//ig;    # just say no to XSS
 
     return $null_value;
 }
