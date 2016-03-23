@@ -64,9 +64,11 @@ sub get_dbh {
             Tranquillus::Util->return_error( 'NO_DB_CONF', "[ $database ]" );
         }
 
-        my $dsn      = $db_config->{$database}{dsn};
-        my $username = $db_config->{$database}{username};
-        my $password = $db_config->{$database}{password};
+        my $dsn         = $db_config->{$database}{dsn};
+        my $username    = $db_config->{$database}{username};
+        my $password    = $db_config->{$database}{password};
+        my $longreadlen = $db_config->{$database}{LongReadLen};
+        my $longtruncok = $db_config->{$database}{LongTruncOk};
 
         # Not currently using SQLite, but that won't need a usename/password...
 
@@ -93,6 +95,14 @@ sub get_dbh {
         #
         if ( exists $db_config->{$database}{on_connect_do} ) {
             $conn->dbh->do($_) for @{ $db_config->{$database}{on_connect_do} };
+        }
+
+        if ($longreadlen) {
+            $conn->dbh->{LongReadLen} = $longreadlen;
+        }
+
+        if ($longtruncok) {
+            $conn->dbh->{LongTruncOk} = $longtruncok;
         }
 
         $db_connections{$database}{conn} = $conn;
