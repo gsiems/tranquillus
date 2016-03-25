@@ -557,11 +557,14 @@ sub parse_date {
 
     # Validate that it is a good date
     # Accepting "31 Feb 2015" as a valid date isn't desirable
+
+    # 2016-03-24 Quote the $yr, $mon, $mday so that "08" doesn't trigger
+    # an "Illegal octal digit '8' at (eval 24) line 4, at end of line" error
     eval qq{
         DateTime->new(
-            year       => $yr,
-            month      => $mon,
-            day        => $mday,
+            year       => "$yr",
+            month      => "$mon",
+            day        => "$mday",
         );
     };
     return undef if ($@);
