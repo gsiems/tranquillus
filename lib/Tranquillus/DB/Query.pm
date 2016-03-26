@@ -205,8 +205,8 @@ sub parse_query_parms {
         my $query_field = ( exists $field->{query_field} ) ? $field->{query_field} : 0;
         my $in_query    = ( exists $valid_parms->{$name} );
         my $where_col =
-              ( exists $field->{db_column} )        ? 'a.' . $field->{db_column}
-            : ( exists $field->{where_clause_col} ) ? $field->{where_clause_col}
+              ( exists $field->{where_clause_col} ) ? $field->{where_clause_col}
+            : ( exists $field->{db_column} )        ? 'a.' . $field->{db_column}
             :                                         undef;
 
         # We only care about the fields that:
