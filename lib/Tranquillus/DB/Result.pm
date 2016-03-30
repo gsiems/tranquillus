@@ -89,7 +89,14 @@ sub standard_result {
 
     $result{data} = \@data;
 
-    Tranquillus::Data->return_result( \%result );
+    my $return = Tranquillus::Data->return_result( \%result );
+    foreach ( @{ $result{data} } ) {
+        $_ = undef;
+    }
+    delete $result{$_} for ( keys %result );
+    undef %result;
+
+    return $return;
 }
 
 sub stream_result {
@@ -144,6 +151,10 @@ sub stream_result {
                             )
                         {
                             $writer->write( Tranquillus::Util->a2delimited( $format, @data ) );
+                            foreach (@data) {
+                                $_ = undef;
+                            }
+                            undef @data;
                         }
                     }
                 }
@@ -155,6 +166,10 @@ sub stream_result {
                         )
                     {
                         $writer->write( Tranquillus::Util->a2delimited( $format, @data ) );
+                        foreach (@data) {
+                            $_ = undef;
+                        }
+                        undef @data;
                     }
                 }
 
@@ -198,6 +213,17 @@ sub stream_result {
                             $rec .= to_json( \%h, { ascii => 1, pretty => $json_pretty } );
                             $rec =~ s/\n$//;
                             $writer->write($rec);
+
+                            foreach (@data) {
+                                $_ = undef;
+                            }
+                            undef @data;
+                            foreach ( keys %h ) {
+                                delete $h{$_};
+                            }
+                            undef %h;
+                            $rec = undef;
+
                             $recordcount++;
                         }
                     }
@@ -216,6 +242,17 @@ sub stream_result {
                         $rec .= to_json( \%h, { ascii => 1, pretty => $json_pretty } );
                         $rec =~ s/\n$//;
                         $writer->write($rec);
+
+                        foreach (@data) {
+                            $_ = undef;
+                        }
+                        undef @data;
+                        foreach ( keys %h ) {
+                            delete $h{$_};
+                        }
+                        undef %h;
+                        $rec = undef;
+
                         $recordcount++;
                     }
                 }
