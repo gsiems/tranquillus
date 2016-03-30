@@ -206,7 +206,7 @@ sub null_value {
         : ( defined $format && $format =~ m/^(tab|csv|xls|ods)/i ) ? '(null)'
         :                                                            'null';
 
-    $null_value =~ s/[^a-z0-9 _()-]//ig;    # just say no to XSS
+    $null_value =~ s/[^a-z0-9 _()\/-]//ig;    # just say no to XSS
 
     return $null_value;
 }
