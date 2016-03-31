@@ -15,7 +15,8 @@ sub prep_query {
 
     # Check for errors before continuing
     if ( exists $query_parts{errors} && scalar @{ $query_parts{errors} } ) {
-        Tranquillus::Util->return_error( 'BAD_QUERY', @{ $query_parts{errors} } );
+        #Tranquillus::Util->return_error( 'BAD_QUERY', @{ $query_parts{errors} } );
+        return \%query_parts;
     }
 
     if ( exists $rt_config->{with} ) {
@@ -31,9 +32,9 @@ sub prep_query {
     #undef %query_parts;
 
     # Check for errors before continuing
-    if ( exists $query{errors} && scalar @{ $query{errors} } ) {
-        Tranquillus::Util->return_error( 'BAD_QUERY', @{ $query{errors} } );
-    }
+    #if ( exists $query{errors} && scalar @{ $query{errors} } ) {
+    #    Tranquillus::Util->return_error( 'BAD_QUERY', @{ $query{errors} } );
+    #}
 
     return \%query;
 }
@@ -220,13 +221,6 @@ sub parse_query_parms {
         next unless ($query_field);
         $query_field_count++;
 
-        # c2. ensure that required fields are being queried
-        if ( $query_field > 1 && !$in_query ) {
-            my %return =
-                ( errors => ["Invalid or incomplete query specified. One or more mandatory parameters are missing ($name)."], );
-            return %return;
-        }
-
         # d. the user is querying by
         next unless ($in_query);
 
@@ -280,7 +274,7 @@ sub parse_query_parms {
 
     # Ensure that any required parameters have been supplied (and passed the parm parser)
     foreach my $field ( @{ $rt_config->{fields} } ) {
-        if ( exists $field->{query_field} && $field->{query_field} > 2 ) {
+        if ( exists $field->{query_field} && $field->{query_field} > 1 ) {
             my $name = $field->{name};
             unless ( exists $parsed_parms{$name} ) {
                 push @errors, "A required parmeter ($name) was not supplied (or had validation issues).";
