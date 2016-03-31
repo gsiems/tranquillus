@@ -223,7 +223,7 @@ sub parse_query_parms {
         # c2. ensure that required fields are being queried
         if ( $query_field > 1 && !$in_query ) {
             my %return =
-                ( errors => ["Invalid or incomplete query specified. One or more mandatory parameters are missing."], );
+                ( errors => ["Invalid or incomplete query specified. One or more mandatory parameters are missing ($name)."], );
             return %return;
         }
 
