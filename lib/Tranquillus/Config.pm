@@ -45,10 +45,7 @@ sub read_configs {
 
     if ( -d $config_dir ) {
         opendir( my $dh, $config_dir );
-        if ($!) {
-            warn "Can't opendir $config_dir: $!";
-        }
-        else {
+        if ($dh) {
             my @config_files =
                 grep { -f $_ }
                 grep { $_ =~ m/\.(json|yml|yaml)$/i }
@@ -261,7 +258,8 @@ sub prime_config_fields {
                 $args->{fields}[$idx]{re} ||= '[^A-Z0-9]+';
             }
             else {
-                $args->{fields}[$idx]{re} ||= '[^A-Za-z0-9]+';
+                $args->{fields}[$idx]{re}         ||= '[^A-Za-z0-9]+';
+                $args->{fields}[$idx]{where_type} ||= 'text';
             }
         }
     }
