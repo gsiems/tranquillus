@@ -19,6 +19,11 @@ sub return_query_result {
     }
     $query->{format} = Tranquillus::Util->response_format( $query->{format} );
 
+    # Errors?
+    if ( exists $query->{errors} ) {
+        return Tranquillus::Data->return_result($query);
+    }
+
     # Determine whether or not to use streaming to return the
     # query results.
     if ( $query->{use_streaming} ) {
