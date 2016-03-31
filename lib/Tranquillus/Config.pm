@@ -2,6 +2,7 @@ package Tranquillus::Config;
 
 use Dancer2 appname => 'Tranquillus';
 use JSON ();
+use Tranquillus::Doc;
 #use Data::Dumper;
 
 my $data_root = ( exists config->{data_root} ) ? config->{data_root} : '/api/vVERSION';
