@@ -42,8 +42,9 @@ sub return_result {
     my %return;
 
     $return{data} = $result->{data};
-    my @column_names = @{ $result->{column_names} };
-    if ( !@column_names && @{ $result->{data} } ) {
+    $return{data} ||= ();
+    my @column_names = ( exists $result->{column_names} ) ? @{ $result->{column_names} } : ();
+    if ( !@column_names && exists $result->{data} && @{ $result->{data} } ) {
         @column_names = sort keys %{ @{ $result->{data} }[0] };
     }
 
@@ -66,8 +67,8 @@ sub return_result {
     }
 
     $return{uri} = request->path;
-    if ( exists $return{data} ) {
-        $return{recordCount} = scalar @{ $return{data} };
+    if ( exists $return{data} && defined $return{data} ) {
+        $return{recordCount} = scalar @{ $return{data} } || 0;
     }
 
     my $return_text = '';
@@ -76,7 +77,14 @@ sub return_result {
     ( $format, $file_name, $disposition, @headers ) = Tranquillus::Util->header_info( $result->{format} );
 
     if ( $result->{errors} ) {
-        push @{ $return{errors} }, $result->{errors};
+
+        if ( ref( $result->{errors} ) eq 'ARRAY' ) {
+            $return{errors} = $result->{errors};
+        }
+        else {
+            push @{ $return{errors} }, $result->{errors};
+        }
+
         header( 'Content-Type' => 'text/html' );
 
         $return_text =
