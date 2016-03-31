@@ -220,6 +220,13 @@ sub parse_query_parms {
         next unless ($query_field);
         $query_field_count++;
 
+        # c2. ensure that required fields are being queried
+        if ( $query_field > 1 && !$in_query ) {
+            my %return =
+                ( errors => ["Invalid or incomplete query specified. One or more mandatory parameters are missing."], );
+            return %return;
+        }
+
         # d. the user is querying by
         next unless ($in_query);
 
