@@ -5,3 +5,4 @@
 * Thoughts on authorization support
 * More example modules/routes
 * Development environment documentation (what's available and how it differs from non-devel)
+* Add strict vs. non-strict parameter checking-- generate a 50x error on invalid parameters or a "friendlier" error message
