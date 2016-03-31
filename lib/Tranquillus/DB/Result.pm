@@ -14,7 +14,14 @@ sub return_query_result {
 
     if ( exists $query->{format} ) {
         unless ( Tranquillus::Util->is_valid_response_format( $query->{format} ) ) {
-            $query->{errors} .= "An invalid return format was specified.";
+
+            # array or scalar?
+            if ( exists $query->{errors} && ref( $query->{errors} ) ne 'ARRAY' ) {
+                my $tmp = $query->{errors};
+                delete $query->{errors};
+                push @{ $query->{errors} }, $tmp;
+            }
+            push @{ $query->{errors} }, "An invalid return format was specified.";
         }
     }
     $query->{format} = Tranquillus::Util->response_format( $query->{format} );
