@@ -532,8 +532,9 @@ sub parse_date {
         ( $mday, $mon, $yr ) = ( $months{ substr( lc $1, 0, 3 ) }, $2, $3 );
     }
 
-    # 12/16/2015
-    elsif ( $date =~ m|^([0-9]{1,2}?)/([0-9]{1,2}?)/([0-9]{2,4}?)$| ) {
+    # 12/16/2015        | 12-16-2015    | 12/16/15      | 12-16-15
+    # But what if I'm not from the U.S. and consider "16-12-2015" to be the correct form?
+    elsif ( $date =~ m|^([0-9]{1,2}?)[/-]([0-9]{1,2}?)[/-]([0-9]{2,4}?)$| ) {
         ( $mon, $mday, $yr ) = ( $1, $2, $3 );
     }
 
