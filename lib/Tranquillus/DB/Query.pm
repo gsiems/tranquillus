@@ -15,7 +15,8 @@ sub prep_query {
 
     # Check for errors before continuing
     if ( exists $query_parts{errors} && scalar @{ $query_parts{errors} } ) {
-        #Tranquillus::Util->return_error( 'BAD_QUERY', @{ $query_parts{errors} } );
+        $query_parts{valid_parms} = $valid_parms;
+        @{ $query_parts{data} } = ();
         return \%query_parts;
     }
 
@@ -30,11 +31,6 @@ sub prep_query {
 
     #delete $query_parts{$_} for ( keys %query_parts );
     #undef %query_parts;
-
-    # Check for errors before continuing
-    #if ( exists $query{errors} && scalar @{ $query{errors} } ) {
-    #    Tranquillus::Util->return_error( 'BAD_QUERY', @{ $query{errors} } );
-    #}
 
     return \%query;
 }
@@ -357,51 +353,46 @@ sub parse_query_parm {
         # Date fields (default is to match the date) if there are two
         # dates then is is assumed that a date range is desired.
 
+        my $to_date = "to_date ( ?, 'yyyy-mm-dd' )";
         my ( $begin, $end ) = split /\s*,\s*/, $parm;
+        my $p_begin = ($begin) ? parse_date($begin) : undef;
+        my $p_end   = ($end)   ? parse_date($end)   : undef;
+        my $operator;
 
         if ( $parm =~ m/,/ ) {
+
             if ( $begin && $end ) {
-                $begin = parse_date($begin);
-                $end   = parse_date($end);
-                if ( $begin && $end ) {
-                    my $where =
-                        "$where_col BETWEEN " . "to_date ( ? , 'yyyy-mm-dd' ) " . "AND to_date ( ? , 'yyyy-mm-dd' )";
-                    push @where_a, $where;
-                    push @vars,    $begin;
-                    push @vars,    $end;
-                    $enable_join_clause = 1;
+                if ( $p_begin && $p_end ) {
+                    $operator = 'BETWEEN';
+                    push @where_a, "$where_col $operator $to_date AND $to_date";
+                    push @vars,    $p_begin;
+                    push @vars,    $p_end;
                 }
             }
             elsif ($begin) {
-                $begin = parse_date($begin);
-                if ($begin) {
-                    my $where = "$where_col >= to_date ( ? , 'yyyy-mm-dd' )";
-                    push @where_a, $where;
-                    push @vars,    $begin;
-                    $enable_join_clause = 1;
+                if ($p_begin) {
+                    $operator = '>=';
+                    push @where_a, "$where_col $operator $to_date";
+                    push @vars,    $p_begin;
                 }
             }
             elsif ($end) {
-                $end = parse_date($end);
-                if ($end) {
-                    my $where = "$where_col <= to_date ( ? , 'yyyy-mm-dd' )";
-                    push @where_a, $where;
-                    push @vars,    $end;
-                    $enable_join_clause = 1;
+                if ($p_end) {
+                    $operator = '<=';
+                    push @where_a, "$where_col $operator $to_date";
+                    push @vars,    $p_end;
                 }
             }
         }
-        elsif ($begin) {
-            my ($operator) = $type =~ m/^([^_]+)_/;
+        elsif ($p_begin) {
+            ($operator) = $type =~ m/^([^_]+)_/;
             $operator ||= '=';
+            push @where_a, "$where_col $operator $to_date";
+            push @vars,    $p_begin;
+        }
 
-            $begin = parse_date($begin);
-            if ($begin) {
-                my $where = "$where_col $operator to_date ( ? , 'yyyy-mm-dd' )";
-                push @where_a, $where;
-                push @vars,    $begin;
-                $enable_join_clause = 1;
-            }
+        if ( scalar @vars > 0 ) {
+            $enable_join_clause = 1;
         }
     }
 
