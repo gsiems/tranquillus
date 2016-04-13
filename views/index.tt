@@ -6,7 +6,7 @@
   <% FOREACH a IN module_list %>
   <div class="toc"><a class="moduleLink" href="/<% a.module_url_token %>"><% a.module_name %></a>:
   <% IF a.module_doc_score != 100 OR a.route_doc_score != 100 OR a.field_doc_score != 100 %><span class="dbStatWarn">Documentation</span> <% END %>
-  </br>
+  <br />
   <div class="desc"><% a.description %></div></div>
   <% END %>
 </div>
