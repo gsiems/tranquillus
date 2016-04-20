@@ -23,10 +23,10 @@
     <% IF routes && routes.size %>
     <h4>The following routes are understood:</h4>
     <ul><% FOREACH r IN routes %>
-      <li>
+      <% IF r.show_doc %><li>
           <a class="routeLink" href="<% r.doc_route %>"><% r.doc_route %></a>:
           <% IF r.route_doc_score != 100 OR r.field_doc_score != 100 %><span class="dbStatWarn">Documentation</span> <% END %><% r.desc %></li>
-    <% END %></ul>
+    <% END %><% END %></ul>
     <% ELSE %><p>This module has no routes.</p><% END %>
   <% END %>
 </div>
