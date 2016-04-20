@@ -124,6 +124,10 @@ sub read_configs {
                     }
                 }
 
+                my $show_doc = ( config->{show_hidden_doc} && config->{show_hidden_doc} )
+                    || ( !exists $h->{hide_doc} );
+                $h->{show_doc} = $show_doc;
+
                 $field_count += scalar @{ $h->{fields} };
                 $field_doc_count += $h->{field_doc_count};
 
@@ -266,6 +270,10 @@ sub prime_config_fields {
     }
 
     my $field_count = scalar @{ $args->{fields} };
+
+    if ( exists $args->{no_global_parms} && $args->{no_global_parms} ) {
+        $args->{no_params} = 1;
+    }
 
     $args->{field_doc_count} = $field_doc_count;
     $args->{field_doc_score} = ($field_count) ? int( $field_doc_count * 100 / $field_count ) : 100;
