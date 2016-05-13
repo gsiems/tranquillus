@@ -85,6 +85,9 @@ sub do_search_suggestions {
     $q =~ s/^\s+//;
     $q =~ s/\s+$//;
 
+    # Because back-slashes can be an issue:
+    $q =~ s/\\/\\\\/g;
+
     if ($q) {
         my $re = ( exists $field->{re} ) ? $field->{re} : 'A-Za-z0-9';
         my $foo = $q;
