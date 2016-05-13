@@ -5,6 +5,8 @@ use JSON ();
 use Tranquillus::Doc;
 #use Data::Dumper;
 
+use POSIX qw(strftime);
+
 my $data_root = ( exists config->{data_root} ) ? config->{data_root} : '/api/vVERSION';
 my $documentation_root =
     ( exists config->{documentation_root} )
@@ -173,7 +175,9 @@ sub read_configs {
                 || ( !exists $rt_config->{hide_doc} );
             if ($show_doc) {
                 my $doc_route = $rt_config->{doc_route};
-                warn "Setting up route: $doc_route\n";
+                my $now = strftime "%Y%m%d-%H:%M:%S", localtime;
+
+                warn "[$now] Setting up route: $doc_route\n";
                 get "$doc_route" => sub { Tranquillus::Doc->do_doc($rt_config) };
             }
 
