@@ -222,8 +222,12 @@ sub parse_query_parms {
 
         my $type = ( exists $field->{where_type} ) ? $field->{where_type} : 'text';
         my $re   = ( exists $field->{re} )         ? $field->{re}         : undef;
-        my $allow_many  = ( exists $field->{allow_many} && $field->{allow_many} ) ? 1               : 0;
-        my $allow_limit = ( exists $field->{limit} )                              ? $field->{limit} : 100;
+        my $allow_many = ( exists $field->{allow_many} && $field->{allow_many} ) ? 1 : 0;
+        my $allow_limit = ( exists $field->{limit} ) ? $field->{limit} : 100;
+
+        # Ignore empty query parameters
+        next unless ( defined $valid_parms->{$name} && length( $valid_parms->{$name} ) > 0 );
+
         my %parsed_parm = parse_query_parm(
             where_col   => $where_col,
             parm        => $valid_parms->{$name},
