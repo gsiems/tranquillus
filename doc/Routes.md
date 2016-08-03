@@ -16,7 +16,7 @@ A route configuration is used for three main purposes:
 
 ## Route Configuration
 
-* **link:*** The portion of the route URL that is unique to the
+* **link:** The portion of the route URL that is unique to the
 configured route.
 
 * **desc:** The user friendly description of the route.
@@ -48,7 +48,7 @@ data. The default is to support paging through use of the "limit" and
 "offset" query parameters. Setting this disables paging.
 
 * **parms_optional:** Optional {1, 0}. Used to indicate that there are
-no required paramters for the route. When there are one or more query
+no required parameters for the route. When there are one or more query
 parameters defined for the route the default behavior is to require at
 least one of the parameters to be supplied when querying the route.
 Setting this disables requiring a parameter.
@@ -58,10 +58,10 @@ be used to return data from the route. This is intended for routes that
 are either slow retrieving the data or that return large amounts of
 data.
 
-* **database:** For database queries, the *connections* label from the
-application configuration file that indicates the database connection
-to use for retrieving the routes data. If no database is specified then
-the default database will be used.
+* **database:** For database queries. Optional. The *connections* label
+from the application configuration file that indicates the database
+connection to use for retrieving the routes data. If no database is
+specified then the default database will be used.
 
 * **with:** For database queries. Optional. Defines the CTE "WITH" clause
 to use in creating the database query.
