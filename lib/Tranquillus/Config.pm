@@ -133,6 +133,8 @@ sub read_configs {
                 $field_count += scalar @{ $h->{fields} };
                 $field_doc_count += $h->{field_doc_count};
 
+                $h->{raw_config} = $rt_config;
+
                 unshift @routes, $h;
             }
         }

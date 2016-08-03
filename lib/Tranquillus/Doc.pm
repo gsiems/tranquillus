@@ -1,6 +1,5 @@
 package Tranquillus::Doc;
 use Dancer2 appname => 'Tranquillus';
-use Data::Dumper;
 
 sub do_doc {
     my $self;
@@ -44,9 +43,6 @@ sub do_doc {
         $h{result_fields} = \@result_fields;
     }
 
-    #my $dev_doc = to_json( \%h, { ascii => 1, pretty => 1 } );
-    #$h{dev_doc} = $dev_doc;
-
     template 'route_doc', \%h;
 }
 
@@ -58,42 +54,7 @@ sub do_config {
     if ( config->{show_config} ) {
 
         my %h;
-        my %t;
-
-        # Strip out any non-valid config file elements
-        # TODO: Fill out the remainder of the list
-        foreach my $key (
-            qw(
-            custom_data
-            database
-            deprecated_by
-            deprecated
-            deprecated_until
-            desc
-            dictionary_link
-            examples
-            fields
-            from
-            hide_doc
-            link
-            no_global_parms
-            no_paging
-            order_by
-            parms_optional
-            search_suggetion_size
-            use_streaming
-            version
-            with
-            )
-            )
-        {
-
-            if ( exists $args->{$key} ) {
-                $t{$key} = $args->{$key};
-            }
-        }
-
-        $h{route_config} = to_json( \%t, { ascii => 1, pretty => 1 } );
+        $h{route_config} = $args->{raw_config};
 
         $h{$_} = $args->{$_}
             for (qw(module_url_token module_name doc_route data_route config_route route_doc_score field_doc_score ));
