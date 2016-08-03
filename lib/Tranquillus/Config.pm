@@ -49,14 +49,13 @@ sub read_configs {
     if ( -d $config_dir ) {
         opendir( my $dh, $config_dir );
         if ($dh) {
-            my @config_files =
-                grep { -f $_ }
-                grep { $_ =~ m/\.(json|yml|yaml)$/i }
-                map  { "$config_dir/$_" } readdir($dh);
+            my @config_files = grep { $_ =~ m/\.(json|yml|yaml)$/i } readdir($dh);
             closedir $dh;
 
             foreach my $file (@config_files) {
-                my $rt_config = _slurp($file);
+                next unless ( -f "$config_dir/$file" );
+
+                my $rt_config = _slurp("$config_dir/$file");
                 my $h;
                 if ( $file =~ m/\.json$/i ) {
                     $h = JSON::from_json( $rt_config, { utf8 => 1 } );
@@ -64,6 +63,8 @@ sub read_configs {
                 else {
                     $h = YAML::Load( decode( 'UTF-8', $rt_config ) );
                 }
+
+                $h->{file_name} = $file;
 
                 # Ensure that there is a version number for the route
                 $h->{version} ||= 1;

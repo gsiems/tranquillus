@@ -57,7 +57,9 @@ sub do_config {
         $h{route_config} = $args->{raw_config};
 
         $h{$_} = $args->{$_}
-            for (qw(module_url_token module_name doc_route data_route config_route route_doc_score field_doc_score ));
+            for (
+            qw(module_url_token module_name doc_route data_route config_route route_doc_score field_doc_score file_name )
+            );
 
         template 'route_config', \%h;
     }

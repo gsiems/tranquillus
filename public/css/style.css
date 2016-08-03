@@ -115,3 +115,6 @@ table tr:nth-child(odd) {
     color: #333;
     background-color: #efefef;
 }
+.mono {
+    font-family: Bitstream Vera Sans Mono, Consolas, Courier New, DejaVu Sans Mono, Liberation Mono, Lucida Console, Monaco, monospace;
+}

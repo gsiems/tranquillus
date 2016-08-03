@@ -20,6 +20,9 @@
 
 <div id="page">
   <% IF doc_route %><p><a href="<% doc_route %>">Documentation</a></p><% END %>
+
+<div>Configuration file name: <span class="mono"><% file_name %></span></div>
+
   <pre>
 <% route_config %>
   </pre>
