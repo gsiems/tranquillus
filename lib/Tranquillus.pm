@@ -63,6 +63,16 @@ sub setup_modules {
 get '/' => sub {
 
     if (@errors) {
+        template 'index', { 'module_list' => \@module_list, errors => \@errors, doc_link => '/api/doc' };
+    }
+    else {
+        template 'index', { 'module_list' => \@module_list, doc_link => '/api/doc' };
+    }
+};
+
+get '/api/doc' => sub {
+
+    if (@errors) {
         template 'index', { 'module_list' => \@module_list, errors => \@errors };
     }
     else {
