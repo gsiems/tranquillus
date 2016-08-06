@@ -6,4 +6,12 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 
 use Tranquillus;
-Tranquillus->to_app;
+
+use Plack::Builder;
+
+builder {
+    enable 'CrossOrigin', origins => '*';
+    enable 'XFrameOptions::All', policy => 'deny';
+    enable 'IEnosniff';
+    Tranquillus->to_app;
+}

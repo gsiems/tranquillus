@@ -4,6 +4,10 @@ requires "Data::Dumper"              => "0";
 requires "POSIX"                     => "0";
 requires "DBIx::Connector"           => "0";
 
+requires "Plack::Middleware::CrossOrigin"        => "0.012";
+requires "Plack::Middleware::XFrameOptions::All" => "0.2";
+requires "Plack::Middleware::IEnosniff"          => "0.02";
+
 recommends "DBD::Pg"          => "0";
 recommends "YAML"             => "0";
 recommends "JSON::XS"         => "0";
