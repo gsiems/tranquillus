@@ -2,10 +2,10 @@
 * Add JSON option to the documentation (return doc as JSON)
 * Add config based smoke tests
 * Authentication support
-    ** Javascript Web Tokens (JWT)
+    * Javascript Web Tokens (JWT)
 * Thoughts on authorization support
-    ** Role based
-    ** Suppport row based authorization
+    * Role based
+    * Suppport row based authorization
 * Add, edit, delete users using REST
 * More example modules/routes
 * Development environment documentation (what's available and how it differs from non-devel)
