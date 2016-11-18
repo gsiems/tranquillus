@@ -42,6 +42,10 @@ my %error_codes = (
         'text' => "I don't understand your question.",
         'code' => 400,
     },
+    'UNAUTHENTICATED' => {
+        'text' => "This resource requires a valid login.",
+        'code' => 401.
+    },
     'FORBIDDEN' => {
         'text' => "I'm sorry Dave. I can't let you do that.",
         'code' => 403,
