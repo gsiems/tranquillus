@@ -77,8 +77,18 @@ sub generate_query {
         }
     }
 
-    my @columns =
-        map { 'a.' . $selectable_cols{$_}{db_column} . ' AS "' . $_ . '"' } (@aliases);
+    # Build the column clauses for the query
+    my @columns;
+    foreach my $alias (@aliases) {
+        my $db_column  = $selectable_cols{$alias}{db_column};
+        my $calculated = $selectable_cols{$alias}{calculated};
+        if ($calculated) {
+            push @columns, qq{$calculated AS "$alias"};
+        }
+        else {
+            push @columns, qq{a.$db_column AS "$alias"};
+        }
+    }
 
     # Only do distinct if one of the supplied query parameters requires it
     my $distinct = $query_parts->{distinct} || '';

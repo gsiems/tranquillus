@@ -84,6 +84,19 @@ fields) used by the route.
     existance of this parameter is also used for determining which
     fields show up in the result set.
 
+    * **calculated:** For optional use with db_column. Used for
+    creating a "calculated field" for determining the result to return
+    for the field. The initial use case was for specifying whether to
+    display the data and time, just the date, or just the time portion
+    of Oracle date datatypes.
+
+    For example: using "to_char ( a.status_date, 'yyyy-mm-dd' )" with
+    an Oracle "date" datatype results in just the date being returned
+    while "to_char ( a.status_date, 'hh24:mi:ss' )" results in just the
+    time portion being returned. While the underlying view/table should
+    normally deal with presenting the correct format but that isn't
+    always possible/practical.
+
     * **query_field:** Indicates that the field is to be available as a
     query parameter { 0 => not a query parameter, 1 => is a query
     parameter, 2 => is a required query parameter }. Default is 0.
