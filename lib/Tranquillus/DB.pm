@@ -17,7 +17,8 @@ sub do_data {
 
         # TODO: redirect or error of some form? 404? Is there a best
         # practice for RESTful?
-        redirect '/';
+        # redirect '/';
+        return Tranquillus::Util->return_error('GONE');
     }
 
     my $valid_parms = Tranquillus::Util->get_valid_parms($rt_config);
