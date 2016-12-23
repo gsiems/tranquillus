@@ -26,135 +26,100 @@
 <h2>Description:</h2>
 <div class="desc"><span <% IF route_doc_score != 100 %>class="warning"<% END %>><% desc %></span></div>
 
-<% IF deprecated %>
-  <h2>Deprecation Notice:</h2>
-  <div class="desc">This route has been deprecated<% IF deprecated_until %> and will cease to function after<% deprecated_until %><% END %>.
-  <% IF deprecated_by %>This route has been replaced by <a href="<% deprecated_by %>"><% deprecated_by %></a>.<% END %>
-</div>
-<% END %>
 
-<% IF settings.show_developer_doc %>
-  <% IF db_table %>
-    <h2>DB Source:</h2>
-    <div class="desc"><% IF dictionary_link %>
-      <a href="<% dictionary_link %>"><% db_table | html %></a>
-    <% ELSE %>
-      <% db_table | html %>
-    <% END %></div>
-  <% END %>
-<% END %>
+<% IF deprecation_status && deprecation_status == 2 %>
+    <h2>Deprecation Notice:</h2>
+    <div class="desc">This route has been deprecated<% IF deprecated_until %> and ceased to function as of <% deprecated_until %><% END %>.
+    <% IF deprecated_by %>This route has been replaced by <a href="<% deprecated_by %>"><% deprecated_by %></a>.<% END %>
+  </div>
 
-<h2>Search parameters:</h2>
-<% IF query_fields %>
-  <div class="desc">One or more of the following search parameters<% IF parms_optional %> may be specified when retrieving data<% ELSE %> need to be specified in order to retrieve data<% END %>:</div>
-  <% IF settings.show_developer_doc %>
-    <table class="parameterTable">
-    <% FOR  p IN query_fields %>
-      <% IF loop.first() %>
-        <thead>
-        <tr class="tableHeader"><th>Parameter name</th><th>Required</th><th>DB Column</th><th>Scrubber</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-      <% END %>
-      <tr>
-      <td><% p.name | html %></td>
-      <td><% p.required | html %></td>
-      <td><% p.db_column | html %></td>
-      <td>
-      <% IF p.where_type %>
-        <% p.where_type | html %>
-        <% IF p.re %> (<% p.re %>)<% END %>
-      <% END %>
-      </td>
-      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %>
-      <% IF p.reference_href %> (Ref:<a href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
-      </td>
-      </tr>
-    <% END %>
-    </tbody>
-    </table>
-    <br />
-  <% ELSE %>
-    <table class="parameterTable">
-    <% FOR p IN query_fields %>
-      <% IF loop.first() %>
-        <thead>
-        <tr class="tableHeader"><th>Parameter name</th><th>Required</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-      <% END %>
-      <tr>
-      <td><% p.name | html %></td>
-      <td><% p.required | html %></td>
-      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %>
-      <% IF p.reference_href %> (Ref:<a class="refLink" href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
-      </td>
-      </tr>
-    <% END %>
-    </tbody>
-    </table>
-    <br />
-  <% END %>
 <% ELSE %>
-  <div class="desc">There are no search parameters available for this route.</div>
-<% END %>
+  <% IF deprecated %>
+    <h2>Deprecation Notice:</h2>
+    <div class="desc">This route has been deprecated<% IF deprecated_until %> and will cease to function after <% deprecated_until %><% END %>.
+    <% IF deprecated_by %>This route has been replaced by <a href="<% deprecated_by %>"><% deprecated_by %></a>.<% END %>
+  </div>
+  <% END %>
 
-<% IF format_fields %>
-  <% FOR  p IN format_fields %>
-    <% IF loop.first() %>
-      <h2>Additional parameters:</h2>
-      <div class="desc">The following, optional, parameters may be specified:</div>
-      <table class="parameterTable">
-      <thead>
-      <tr class="tableHeader"><th>Parameter name</th><th>Description</th></tr></thead>
-      <tbody>
+  <% IF settings.show_developer_doc %>
+    <% IF db_table %>
+      <h2>DB Source:</h2>
+      <div class="desc"><% IF dictionary_link %>
+        <a href="<% dictionary_link %>"><% db_table | html %></a>
+      <% ELSE %>
+        <% db_table | html %>
+      <% END %></div>
     <% END %>
-    <tr>
-    <td><% p.name | html %></td>
-    <td><% p.desc | html %></td>
-    </tr>
-    <% IF loop.last() %>
+  <% END %>
+
+  <h2>Search parameters:</h2>
+  <% IF query_fields %>
+    <div class="desc">One or more of the following search parameters<% IF parms_optional %> may be specified when retrieving data<% ELSE %> need to be specified in order to retrieve data<% END %>:</div>
+    <% IF settings.show_developer_doc %>
+      <table class="parameterTable">
+      <% FOR  p IN query_fields %>
+        <% IF loop.first() %>
+          <thead>
+          <tr class="tableHeader"><th>Parameter name</th><th>Required</th><th>DB Column</th><th>Scrubber</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+        <% END %>
+        <tr>
+        <td><% p.name | html %></td>
+        <td><% p.required | html %></td>
+        <td><% p.db_column | html %></td>
+        <td>
+        <% IF p.where_type %>
+          <% p.where_type | html %>
+          <% IF p.re %> (<% p.re %>)<% END %>
+        <% END %>
+        </td>
+        <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %>
+        <% IF p.reference_href %> (Ref:<a href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
+        </td>
+        </tr>
+      <% END %>
+      </tbody>
+      </table>
+      <br />
+    <% ELSE %>
+      <table class="parameterTable">
+      <% FOR p IN query_fields %>
+        <% IF loop.first() %>
+          <thead>
+          <tr class="tableHeader"><th>Parameter name</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+        <% END %>
+        <tr>
+        <td><% p.name | html %></td>
+        <td><% p.required | html %></td>
+        <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %>
+        <% IF p.reference_href %> (Ref:<a class="refLink" href="<% p.reference_href %>"><% p.reference_href %></a>)<% END %>
+        </td>
+        </tr>
+      <% END %>
       </tbody>
       </table>
       <br />
     <% END %>
-  <% END %>
-<% END %>
-
-<% IF result_fields %>
-  <h2>Result Set Definitions:</h2>
-  <% IF settings.show_developer_doc %>
-    <table class="parameterTable">
-    <% FOR  p IN result_fields %>
-      <% IF loop.first() %>
-        <thead>
-        <tr class="tableHeader"><th>Field name</th><th>DB Column</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-      <% END %>
-      <tr>
-      <td><% p.name | html %></td>
-      <td><% p.db_column | html %></td>
-      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %></td>
-      </tr>
-      <% IF loop.last() %>
-        </tbody>
-        </table>
-        <br />
-      <% END %>
-    <% END %>
   <% ELSE %>
-    <table class="parameterTable">
-    <% FOR  p IN result_fields %>
+    <div class="desc">There are no search parameters available for this route.</div>
+  <% END %>
+
+  <% IF format_fields %>
+    <% FOR  p IN format_fields %>
       <% IF loop.first() %>
+        <h2>Additional parameters:</h2>
+        <div class="desc">The following, optional, parameters may be specified:</div>
+        <table class="parameterTable">
         <thead>
-        <tr class="tableHeader"><th>Field name</th><th>Description</th></tr>
-        </thead>
+        <tr class="tableHeader"><th>Parameter name</th><th>Description</th></tr></thead>
         <tbody>
       <% END %>
       <tr>
       <td><% p.name | html %></td>
-      <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %></td>
+      <td><% p.desc | html %></td>
       </tr>
       <% IF loop.last() %>
         </tbody>
@@ -163,14 +128,59 @@
       <% END %>
     <% END %>
   <% END %>
-<% END %>
 
-<% IF examples %>
-  <h2>Example Queries:</h2>
-  <ul>
-  <% FOREACH example IN examples %>
-    <li><a class="exampleLink" href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
+  <% IF result_fields %>
+    <h2>Result Set Definitions:</h2>
+    <% IF settings.show_developer_doc %>
+      <table class="parameterTable">
+      <% FOR  p IN result_fields %>
+        <% IF loop.first() %>
+          <thead>
+          <tr class="tableHeader"><th>Field name</th><th>DB Column</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+        <% END %>
+        <tr>
+        <td><% p.name | html %></td>
+        <td><% p.db_column | html %></td>
+        <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %></td>
+        </tr>
+        <% IF loop.last() %>
+          </tbody>
+          </table>
+          <br />
+        <% END %>
+      <% END %>
+    <% ELSE %>
+      <table class="parameterTable">
+      <% FOR  p IN result_fields %>
+        <% IF loop.first() %>
+          <thead>
+          <tr class="tableHeader"><th>Field name</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+        <% END %>
+        <tr>
+        <td><% p.name | html %></td>
+        <td><% IF p.field_doc_score == 100 %><% p.desc | html %><% ELSE %><span class="warning"><% p.desc | html %></span><% END %></td>
+        </tr>
+        <% IF loop.last() %>
+          </tbody>
+          </table>
+          <br />
+        <% END %>
+      <% END %>
+    <% END %>
   <% END %>
-  </ul>
+
+  <% IF examples %>
+    <h2>Example Queries:</h2>
+    <ul>
+    <% FOREACH example IN examples %>
+      <li><a class="exampleLink" href="<% data_route %><% example %>"><% data_route %><% example %></a></li>
+    <% END %>
+    </ul>
+  <% END %>
+
 <% END %>
 </div>
