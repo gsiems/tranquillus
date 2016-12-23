@@ -54,6 +54,10 @@ my %error_codes = (
         'text' => 'Document cannot be found.',
         'code' => 404,
     },
+    'GONE' => {
+        'text' => 'Document is no longer available.',
+        'code' => 410,
+    },
     'BAD_PROXY' => {
         'text' => 'Service Unavailable: There was a failure to proxy the request.',
         'code' => 502,
@@ -145,12 +149,11 @@ sub deprecation_policy {
         my $deprecated_until = $args->{deprecated_until} || undef;
         if ($deprecated_until) {
             my ( $year, $month, $day ) = split '-', $deprecated_until;
-            my $tz = strftime "%Z", localtime;
+
             my $depdate = DateTime->new(
-                year      => $year,
-                month     => $month,
-                day       => $day,
-                time_zone => $tz,
+                year  => $year,
+                month => $month,
+                day   => $day,
             );
 
             $policy{status}           = ( $depdate->epoch() > time() ) ? 1 : 2;
