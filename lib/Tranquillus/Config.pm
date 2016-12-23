@@ -3,6 +3,7 @@ package Tranquillus::Config;
 use Dancer2 appname => 'Tranquillus';
 use JSON ();
 use Tranquillus::Doc;
+use Tranquillus::Util;
 #use Data::Dumper;
 
 use POSIX qw(strftime);
@@ -174,19 +175,24 @@ sub read_configs {
         # Add the "auto-discovered" documentation routes
         foreach my $rt_config (@routes) {
 
+            if ( config->{show_config} ) {
+                my $config_route = $rt_config->{config_route};
+                get "$config_route" => sub { Tranquillus::Doc->do_config($rt_config) };
+            }
+
             my $show_doc = ( config->{show_hidden_doc} && config->{show_hidden_doc} )
                 || ( !exists $rt_config->{hide_doc} );
             if ($show_doc) {
                 my $doc_route = $rt_config->{doc_route};
                 my $now = strftime "%Y%m%d-%H:%M:%S", localtime;
-
                 warn "[$now] Setting up route: $doc_route\n";
-                get "$doc_route" => sub { Tranquillus::Doc->do_doc($rt_config) };
-            }
 
-            if ( config->{show_config} ) {
-                my $config_route = $rt_config->{config_route};
-                get "$config_route" => sub { Tranquillus::Doc->do_config($rt_config) };
+                if ( $rt_config->{deprecated} ) {
+                    my $deprecation_policy = Tranquillus::Util->deprecation_policy($rt_config);
+                    $rt_config->{deprecation_status} = $deprecation_policy->{status};
+                }
+
+                get "$doc_route" => sub { Tranquillus::Doc->do_doc($rt_config) };
             }
         }
     }
