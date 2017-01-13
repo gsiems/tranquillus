@@ -150,7 +150,7 @@ sub stream_result {
             my $cb = sub {
                 my $respond = $Dancer2::Core::Route::RESPONDER;
                 my $writer  = $respond->(
-                    [ 206, [ @header, 'Transfer-Encoding' => 'chunked', 'Content-Disposition' => $disposition ] ] );
+                    [ 200, [ @header, 'Transfer-Encoding' => 'chunked', 'Content-Disposition' => $disposition ] ] );
 
                 $writer->write( Tranquillus::Util->a2delimited( $format, @column_names ) );
 
@@ -206,7 +206,7 @@ sub stream_result {
             my $cb = sub {
                 my $first   = 1;
                 my $respond = $Dancer2::Core::Route::RESPONDER;
-                my $writer  = $respond->( [ 206, [ @header, 'Transfer-Encoding' => 'chunked' ] ] );
+                my $writer  = $respond->( [ 200, [ @header, 'Transfer-Encoding' => 'chunked' ] ] );
                 $writer->write($jhead);
                 my $recordcount = 0;
 
