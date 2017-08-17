@@ -86,12 +86,46 @@ sub return_result {
             push @{ $return{errors} }, $result->{errors};
         }
 
-        header( 'Content-Type' => 'text/html' );
+        if ( $format eq 'json' or $format eq 'jsonp' ) {
 
-        $return_text =
-              "<html><head></head><body><pre>\n"
-            . to_json( \%return, { ascii => 1, pretty => 1 } )
-            . "\n</pre></body></html>\n";
+            if ( $format eq 'json' ) {
+                $return_text = to_json( \%return, { ascii => 1 } );
+            }
+            else {
+                my $callback = Tranquillus::Util->requested_callback();
+                $return_text = $callback . "(" . to_json( \%return, { ascii => 1 } ) . ");";
+
+            }
+
+            # This IS a bit hacky, however send_error wants to wrap
+            # things in HTML and using Dancer2::Core::Response by itself
+            # has brought no joy either...
+            my $cb = sub {
+                my $respond = $Dancer2::Core::Route::RESPONDER;
+                my $writer = $respond->( [ 400, [ 'Content-Type' => 'application/json; charset=UTF-8' ] ] );
+
+                $writer->write($return_text);
+                $writer->write(undef);
+                $writer->write("\r\n");
+                $writer->close;
+            };
+
+            my $response = Dancer2::Core::Response::Delayed->new(
+                cb       => $cb,
+                request  => $Dancer2::Core::Route::REQUEST,
+                response => $Dancer2::Core::Route::RESPONSE,
+            );
+            return $response;
+
+        }
+
+        else {
+            #header( 'Content-Type' => 'text/html' );
+
+            $return_text = to_json( \%return, { ascii => 1, pretty => 1 } );
+            send_error( $return_text, 400 );
+
+        }
     }
     else {
 
