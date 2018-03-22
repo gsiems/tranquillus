@@ -101,6 +101,9 @@ fields) used by the route.
     query parameter { 0 => not a query parameter, 1 => is a query
     parameter, 2 => is a required query parameter }. Default is 0.
 
+    * **default:** For (optional) query parameter fields. The default
+    value to use for the query if no value is supplied by the user.
+
     * **reference_href:** For query parameter fields. If the valid
     values for this field are defined by another route then this is
     used for defining the reference route.

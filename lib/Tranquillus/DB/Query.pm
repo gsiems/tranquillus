@@ -211,10 +211,16 @@ sub parse_query_parms {
         my $name        = $field->{name};
         my $query_field = ( exists $field->{query_field} ) ? $field->{query_field} : 0;
         my $in_query    = ( exists $valid_parms->{$name} );
+        my $default     = ( exists $field->{default} ) ? $field->{default} : undef;
         my $where_col =
               ( exists $field->{where_clause_col} ) ? $field->{where_clause_col}
             : ( exists $field->{db_column} )        ? 'a.' . $field->{db_column}
             :                                         undef;
+
+        my $parm =
+              ( exists $valid_parms->{$name} && length( $valid_parms->{$name} ) > 0 ) ? $valid_parms->{$name}
+            : ( defined $field->{default}    && length( $field->{default} ) > 0 )     ? $field->{default}
+            :                                                                           undef;
 
         # We only care about the fields that:
         # a. are named,
@@ -228,7 +234,7 @@ sub parse_query_parms {
         $query_field_count++;
 
         # d. the user is querying by
-        next unless ($in_query);
+        next unless ( defined $parm );
 
         my $type = ( exists $field->{where_type} ) ? $field->{where_type} : 'text';
         my $re   = ( exists $field->{re} )         ? $field->{re}         : undef;
@@ -236,11 +242,11 @@ sub parse_query_parms {
         my $allow_limit = ( exists $field->{limit} ) ? $field->{limit} : 100;
 
         # Ignore empty query parameters
-        next unless ( defined $valid_parms->{$name} && length( $valid_parms->{$name} ) > 0 );
+        # next unless ( defined $valid_parms->{$name} && length( $valid_parms->{$name} ) > 0 );
 
         my %parsed_parm = parse_query_parm(
             where_col   => $where_col,
-            parm        => $valid_parms->{$name},
+            parm        => $parm,
             type        => $type,
             allow_many  => $allow_many,
             allow_limit => $allow_limit,
