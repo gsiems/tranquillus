@@ -291,7 +291,8 @@ sub get_valid_parms {
         $p{$name} = 1;
     }
 
-    foreach my $name ( keys params ) {
+    my %t = params;
+    foreach my $name ( keys %t ) {
         if ( exists $p{$name} && $p{$name} ) {
             $valid_parms{$name} = params->{$name};
         }
@@ -316,7 +317,8 @@ sub get_invalid_parms {
         $p{$name} = 1;
     }
 
-    foreach my $name ( keys params ) {
+    my %t = params;
+    foreach my $name ( keys %t ) {
         unless ( exists $p{$name} && $p{$name} ) {
             my $value = params->{$name};
             $value =~ s/[^a-zA-Z0-9_]/_/g;    # just say no to XSS
