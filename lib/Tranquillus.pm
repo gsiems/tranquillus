@@ -63,20 +63,20 @@ sub setup_modules {
 get '/' => sub {
 
     if (@errors) {
-        template 'index', { 'module_list' => \@module_list, errors => \@errors };
+        template 'index', { 'module_list' => \@module_list, errors => \@errors, 'app_title' => config->{app_title} };
     }
     else {
-        template 'index', { 'module_list' => \@module_list };
+        template 'index', { 'module_list' => \@module_list, 'app_title' => config->{app_title} };
     }
 };
 
 get '/api/doc' => sub {
 
     if (@errors) {
-        template 'modules_list', { 'module_list' => \@module_list, errors => \@errors };
+        template 'modules_list', { 'module_list' => \@module_list, errors => \@errors, 'app_title' => config->{app_title} };
     }
     else {
-        template 'modules_list', { 'module_list' => \@module_list };
+        template 'modules_list', { 'module_list' => \@module_list, 'app_title' => config->{app_title} };
     }
 };
 

@@ -43,6 +43,10 @@ sub do_doc {
         $h{result_fields} = \@result_fields;
     }
 
+    if ( config->{app_title} ) {
+        $h{app_title} = config->{app_title} ;
+    }
+
     template 'route_doc', \%h;
 }
 
@@ -60,6 +64,10 @@ sub do_config {
             for (
             qw(module_url_token module_name doc_route data_route config_route route_doc_score field_doc_score file_name )
             );
+
+        if ( config->{app_title} ) {
+            $h{app_title} = config->{app_title} ;
+        }
 
         template 'route_config', \%h;
     }

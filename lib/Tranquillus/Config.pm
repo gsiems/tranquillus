@@ -162,6 +162,10 @@ sub read_configs {
         'field_count'      => $field_count,
     );
 
+    if ( config->{app_title} ) {
+        $return{app_title} = config->{app_title} ;
+    }
+
     if ( ( config->{show_hidden_doc} && config->{show_hidden_doc} ) || !$hide_doc ) {
 
         #my $dev_doc = to_json( \%return, { ascii => 1, pretty => 1 } );
