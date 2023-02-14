@@ -130,7 +130,7 @@ sub return_result {
     else {
 
         for ( my $i = 0 ; $i < $#headers ; $i += 2 ) {
-            header( $headers[$i] => $headers[ $i + 1 ] );
+            response_header( $headers[$i] => $headers[ $i + 1 ] );
         }
 
         # [JSON AS] TEXT
@@ -156,7 +156,7 @@ sub return_result {
             || $format eq 'ods'
             || $format eq 'xls' )
         {
-            header( 'Content-Disposition' => $disposition );
+            response_header( 'Content-Disposition' => $disposition );
 
             if (@column_names) {
                 $return_text = Tranquillus::Util->a2delimited( $format, @column_names );
